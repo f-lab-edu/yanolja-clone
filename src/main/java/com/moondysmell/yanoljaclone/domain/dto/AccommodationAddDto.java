@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,13 +13,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
 public class AccommodationAddDto {
     @Id
     @NotBlank(message = "숙소 이름은 필수입니다")
     private String accomName;
 
-    @NotBlank
+    @NotNull
     private int locationCode;
 
     @NotBlank
@@ -30,10 +30,10 @@ public class AccommodationAddDto {
     @NotBlank
     private String roomName;
 
-    @NotBlank
+    @Min(value = 0)
     private int roomCnt;
 
-    @NotBlank
+    @Min(value = 0)
     private int price;
 
     private String detail;

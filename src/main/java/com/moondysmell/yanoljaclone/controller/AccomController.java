@@ -1,6 +1,7 @@
 package com.moondysmell.yanoljaclone.controller;
 
 import com.moondysmell.yanoljaclone.domain.Accommodation;
+import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.dto.AccommodationAddDto;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.service.AccomService;
@@ -21,7 +22,6 @@ import javax.validation.Valid;
 @RequestMapping("/accommodation")
 public class AccomController {
     private final AccomService accomService;
-    private final AccomRepository accomRepository;
 
     //지역 코드로 숙소 검색
     @GetMapping("/getAll/location")
@@ -30,6 +30,11 @@ public class AccomController {
         return result;
     }
 
+    // 지역코드 리스트 받기 (register form을 위해)
+    @GetMapping("getLocationCode")
+    public List<LocationCode> getAllLocationCode() {
+        return accomService.findAllLocationCode();
+    }
     //숙소 추가
     //필수: accomName, locationCode, address, type, roomName, roomCnt, price
     @ExceptionHandler(MethodArgumentNotValidException.class)
