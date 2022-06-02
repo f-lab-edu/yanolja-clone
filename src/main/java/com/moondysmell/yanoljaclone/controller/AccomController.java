@@ -40,7 +40,7 @@ public class AccomController {
     }
 
     // 지역코드 리스트 받기 (register form을 위해)
-    @GetMapping("getLocationCode")
+    @GetMapping("/getLocationCode")
     public List<LocationCode> getAllLocationCode() {
         return accomService.findAllLocationCode();
     }
