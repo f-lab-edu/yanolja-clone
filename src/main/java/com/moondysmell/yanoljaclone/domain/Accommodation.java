@@ -57,7 +57,7 @@ public class Accommodation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_code", referencedColumnName = "code")
-//    @JsonIgnore
+    @JsonIgnore
     private LocationCode locationCode;
 
 }

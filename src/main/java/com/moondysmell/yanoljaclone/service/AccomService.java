@@ -3,8 +3,8 @@ package com.moondysmell.yanoljaclone.service;
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.RoomType;
-import com.moondysmell.yanoljaclone.domain.dto.AccommodationAddDto;
-import com.moondysmell.yanoljaclone.domain.dto.AccommodationReadDto;
+import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
+import com.moondysmell.yanoljaclone.domain.dto.AccomDetailDto;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
 import java.util.List;
@@ -45,7 +45,7 @@ public class AccomService {
     }
 
 
-    public Accommodation createAccom(AccommodationAddDto accom) {
+    public Accommodation createAccom(AccomAddDto accom) {
         Accommodation newAccom = new Accommodation();
         String accomCode = createAccomCode();
         String roomType =  RoomType.valueOf(accom.getType()).toString();
@@ -73,9 +73,9 @@ public class AccomService {
         return UUID.randomUUID().toString().substring(0,8);
     }
 
-    public List<AccommodationReadDto> convertAccomToReadDto(List<Accommodation> accomList) {
+    public List<AccomDetailDto> convertAccomToReadDto(List<Accommodation> accomList) {
         return accomList.stream()
-                   .map(accom -> new AccommodationReadDto(accom))
+                   .map(accom -> new AccomDetailDto(accom))
                    .collect(Collectors.toList());
     }
 

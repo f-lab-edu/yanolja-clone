@@ -1,24 +1,12 @@
 package com.moondysmell.yanoljaclone.domain.dto;
 
 import com.moondysmell.yanoljaclone.domain.Accommodation;
-import com.moondysmell.yanoljaclone.domain.LocationCode;
-import com.moondysmell.yanoljaclone.domain.RoomType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import lombok.Data;
 import lombok.Getter;
 
 
 @Getter
-public class AccommodationReadDto {
+public class AccomDetailDto {
     @Id
     private Long id;
 
@@ -42,7 +30,7 @@ public class AccommodationReadDto {
 
     private String detail;
 
-    public AccommodationReadDto(Accommodation accommodation) {
+    public AccomDetailDto(Accommodation accommodation) {
         id = accommodation.getId();
         accomCode = accommodation.getAccomCode();
         accomName = accommodation.getAccomName();
