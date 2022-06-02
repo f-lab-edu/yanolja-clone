@@ -27,18 +27,16 @@ public class AccomController {
 
     //지역 코드로 숙소 검색
     @GetMapping("/getAll/location")
-    public List<Accommodation> getAllLocation(@RequestParam int locationCode) throws Exception {
-        List<Accommodation> result = accomService.findAllByLocationCode(locationCode);
-        return result;
+    public List<AccommodationReadDto> getAllLocation(@RequestParam int locationCode) throws Exception {
+        List<Accommodation> accomList = accomService.findAllByLocationCode(locationCode);
+        return accomService.convertAccomToReadDto(accomList);
     }
 
     // 모든 숙소 검색 지역 정보까지 읽기 (join 연습용)
     @GetMapping("/getAllDetail")
     public List<AccommodationReadDto> getAllDetail() {
         List<Accommodation> accomList = accomService.findAllDetail();
-        return accomList.stream()
-            .map(accom -> new AccommodationReadDto(accom))
-            .collect(Collectors.toList());
+        return accomService.convertAccomToReadDto(accomList);
     }
 
     // 지역코드 리스트 받기 (register form을 위해)

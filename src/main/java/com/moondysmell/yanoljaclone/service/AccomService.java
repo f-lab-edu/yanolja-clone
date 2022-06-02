@@ -10,6 +10,7 @@ import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,13 @@ public class AccomService {
 
     public List<Accommodation> findAllDetail() {
         return accomRepository.findAllDetail();
-//        return accomRepository.findAll();
     }
     public List<Accommodation> findAllByLocationCode(int locationCode) {
-        return accomRepository.findAllByLocationCode(locationCode);
+        Optional<LocationCode> location= locationCodeRepository.findById(locationCode);
+        if (location.isEmpty())
+            throw new RuntimeException("Location Code가 존재하지 않습니다.");
+
+        return accomRepository.findAllByLocationCode(location.get());
     }
 
 
@@ -69,6 +73,11 @@ public class AccomService {
         return UUID.randomUUID().toString().substring(0,8);
     }
 
+    public List<AccommodationReadDto> convertAccomToReadDto(List<Accommodation> accomList) {
+        return accomList.stream()
+                   .map(accom -> new AccommodationReadDto(accom))
+                   .collect(Collectors.toList());
+    }
 
 
 }
