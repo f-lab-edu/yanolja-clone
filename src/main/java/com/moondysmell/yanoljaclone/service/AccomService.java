@@ -4,6 +4,7 @@ import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.RoomType;
 import com.moondysmell.yanoljaclone.domain.dto.AccommodationAddDto;
+import com.moondysmell.yanoljaclone.domain.dto.AccommodationReadDto;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
 import java.util.List;
@@ -31,10 +32,11 @@ public class AccomService {
         return locationCodeRepository.findAll();
     }
 
-
-
-
-    public List<Accommodation> findAllByLocationCode(int locationCode) throws Exception {
+    public List<Accommodation> findAllDetail() {
+        return accomRepository.findAllDetail();
+//        return accomRepository.findAll();
+    }
+    public List<Accommodation> findAllByLocationCode(int locationCode) {
         return accomRepository.findAllByLocationCode(locationCode);
     }
 
@@ -42,15 +44,16 @@ public class AccomService {
     public Accommodation createAccom(AccommodationAddDto accom) {
         Accommodation newAccom = new Accommodation();
         String accomCode = createAccomCode();
-        RoomType roomType =  RoomType.valueOf(accom.getType());
+        String roomType =  RoomType.valueOf(accom.getType()).toString();
 
-        boolean codeExistYn = locationCodeRepository.findById(accom.getLocationCode()).isPresent();
-        if (!codeExistYn)
+        Optional<LocationCode> locationCode= locationCodeRepository.findById(accom.getLocationCode());
+        if (locationCode.isEmpty())
             throw new RuntimeException("Location Code가 존재하지 않습니다.");
 
         newAccom.setAccomCode(accomCode);
         newAccom.setAccomName(accom.getAccomName());
-        newAccom.setLocationCode(accom.getLocationCode());
+        newAccom.setLocationCode(locationCode.get());
+//        newAccom.setLocationCode(accom.getLocationCode());
         newAccom.setAddress(accom.getAddress());
         newAccom.setType(roomType);
         newAccom.setRoomName(accom.getRoomName());
@@ -65,6 +68,7 @@ public class AccomService {
     public String createAccomCode() {
         return UUID.randomUUID().toString().substring(0,8);
     }
+
 
 
 }

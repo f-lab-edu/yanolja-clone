@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class AccommodationAddDto {
     @Id
     @NotBlank(message = "숙소 이름은 필수입니다")
