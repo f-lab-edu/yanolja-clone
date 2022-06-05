@@ -29,7 +29,7 @@ public class ReservationResponseDto {
 
     public ReservationResponseDto(Reservation reservation){
         this.reserv_id = reservation.getReserv_id();
-        this.accom_name = reservation.getAccom().getAccom_name();
+        this.accom_name = reservation.getAccom().getAccomName();
         this.checkin = reservation.getCheckin();
         this.checkout = reservation.getCheckout();
         this.trans_type = reservation.getTrans_type();

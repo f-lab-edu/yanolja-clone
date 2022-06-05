@@ -3,7 +3,7 @@ package com.moondysmell.yanoljaclone.service;
 import com.moondysmell.yanoljaclone.domain.Reservation;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto;
 import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepository;
-import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepositoryCustom;
+//import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepositoryCustom;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
