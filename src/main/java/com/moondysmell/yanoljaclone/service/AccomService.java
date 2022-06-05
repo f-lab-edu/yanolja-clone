@@ -41,6 +41,14 @@ public class AccomService {
         Optional<LocationCode> location= locationCodeRepository.findById(locationCode);
         if (location.isEmpty())
             throw new RuntimeException("Location Code가 존재하지 않습니다.");
+
+        try{
+            RoomType typevalid = RoomType.valueOf(type);
+        }catch (IllegalArgumentException e) {
+            log.error(">>> " + e.getMessage());
+            throw new RuntimeException("type이 존재하지 않습니다.");
+        }
+
         return accomRepository.findAllByLocationCodeAndType(locationCode, type);
     }
 
