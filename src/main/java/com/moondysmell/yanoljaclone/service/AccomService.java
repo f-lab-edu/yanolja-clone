@@ -4,7 +4,7 @@ import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.RoomType;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
-import com.moondysmell.yanoljaclone.domain.dto.AccomDetailDto;
+import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
 import java.util.List;
@@ -29,19 +29,13 @@ public class AccomService {
         this.locationCodeRepository = locationCodeRepository;
     }
 
-    public List<LocationCode> findAllLocationCode() {
-        return locationCodeRepository.findAll();
-    }
 
-    public List<Accommodation> findAllDetail() {
-        return accomRepository.findAllDetail();
-    }
     public List<Accommodation> findAllByLocationCode(int locationCode) {
         Optional<LocationCode> location= locationCodeRepository.findById(locationCode);
         if (location.isEmpty())
             throw new RuntimeException("Location Code가 존재하지 않습니다.");
 
-        return accomRepository.findAllByLocationCode(location.get());
+        return accomRepository.findAllByLocationCode(location.get().getCode());
     }
 
 
@@ -56,14 +50,13 @@ public class AccomService {
 
         newAccom.setAccomCode(accomCode);
         newAccom.setAccomName(accom.getAccomName());
-        newAccom.setLocationCode(locationCode.get());
-//        newAccom.setLocationCode(accom.getLocationCode());
+//        newAccom.setLocationCode(locationCode.get());
+        newAccom.setLocationCode(accom.getLocationCode());
         newAccom.setAddress(accom.getAddress());
         newAccom.setType(roomType);
         newAccom.setRoomName(accom.getRoomName());
         newAccom.setRoomCnt(accom.getRoomCnt());
         newAccom.setPrice(accom.getPrice());
-        newAccom.setDetail(accom.getDetail());
 
         return accomRepository.save(newAccom);
 
@@ -73,11 +66,26 @@ public class AccomService {
         return UUID.randomUUID().toString().substring(0,8);
     }
 
-    public List<AccomDetailDto> convertAccomToReadDto(List<Accommodation> accomList) {
-        return accomList.stream()
-                   .map(accom -> new AccomDetailDto(accom))
-                   .collect(Collectors.toList());
+
+
+    public Accommodation createRoom(RoomAddDto roomAddDto) throws CloneNotSupportedException {
+        List<Accommodation> accomList = accomRepository.findAllByAccomCode(roomAddDto.getAccomCode());
+
+        if (accomList.size() == 0)
+            throw new RuntimeException("숙소가 존재하지 않습니다.");
+
+        Accommodation newRoomAccom = accomList.get(0).copy();
+        newRoomAccom.setId(null);
+        newRoomAccom.setRoomName(roomAddDto.getRoomName());
+        newRoomAccom.setRoomCnt(roomAddDto.getRoomCnt());
+        newRoomAccom.setPrice(roomAddDto.getPrice());
+//        newRoomAccom.setDetail(roomAddDto.getDetail().isBlank()? targetAccom.get().getDetail() : newRoomAccom.getDetail() );
+
+        try {
+            newRoomAccom =accomRepository.save(newRoomAccom);
+        } catch (Exception e) {
+            log.info(">>> " + e);
+        }
+        return newRoomAccom;
     }
-
-
 }

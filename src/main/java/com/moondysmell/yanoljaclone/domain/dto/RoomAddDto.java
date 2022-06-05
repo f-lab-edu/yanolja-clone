@@ -7,22 +7,10 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class AccomAddDto {
+public class RoomAddDto {
     @Id
     @NotBlank
     private String accomCode;
-
-    @NotBlank
-    private String accomName;
-
-    @NotNull
-    private int locationCode;
-
-    @NotBlank
-    private String address;
-
-    @NotBlank
-    private String type;
 
     @NotBlank
     private String roomName;
@@ -33,5 +21,6 @@ public class AccomAddDto {
     @Min(value = 0)
     private int price;
 
+    private String detail;
 
 }
