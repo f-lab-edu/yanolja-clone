@@ -64,7 +64,10 @@ public class Accommodation {
     @Column(name = "detail")
     private String detail;
 
-
+    //Accomodation 1 : N Reservation
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "accom", targetEntity = Reservation.class)
+    @JsonIgnore
+    private List<Reservation> reserv = new ArrayList<>();
 
     public Accommodation copy() {
         Accommodation newAccom = new Accommodation();
@@ -88,10 +91,6 @@ public class Accommodation {
 
         return newAccom;
     }
-
-    //Accomodation 1 : N Reservation
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "accom", targetEntity = Reservation.class)
-    private List<Reservation> reserv = new ArrayList<>();
 
     public void removeReserv(){
         int restroom_cnt = this.roomCnt - 1;
