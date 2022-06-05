@@ -9,6 +9,8 @@ import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
 import com.moondysmell.yanoljaclone.repository.AccommodationRepository;
 import com.moondysmell.yanoljaclone.service.AccomService;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +29,20 @@ public class AccomTest {
     private AccomService accomService;
 
     @Test
-    public void getAll() {
+    public void getAllByLocation() {
         List<Accommodation> accomList = accomService.findAllByLocationCode(10);
+
+        Map<String, Set<Accommodation>> groupedAccomList = accomList.stream()
+                                                               .collect(
+                                                                   Collectors.groupingBy(
+                                                                       Accommodation::getAccomCode,
+                                                                       toSet()));
+        log.info("groupedAccomList keySet: " + groupedAccomList.keySet().toString());
+    }
+
+    @Test
+    public void getAllByLocationAndType() {
+        List<Accommodation> accomList = accomService.findAllByTypeAndLocationCode("Hotel",10);
 
         Map<String, Set<Accommodation>> groupedAccomList = accomList.stream()
                                                                .collect(
@@ -65,5 +79,16 @@ public class AccomTest {
 
         Accommodation createdRoom = accomService.createRoom(newRoom);
         log.info(createdRoom.toString());
+    }
+
+
+    @Test
+    public void calculateEmptyRoomByAccomId() {
+
+        LocalDate from = LocalDate.parse("2022-06-06", DateTimeFormatter.ISO_DATE);
+        LocalDate to = LocalDate.parse("2022-06-08", DateTimeFormatter.ISO_DATE);
+
+        int emptyRoomCnt = accomService.countEmptyRoomsByAccomId(1,from, to);
+        log.info("result: " + emptyRoomCnt);
     }
 }

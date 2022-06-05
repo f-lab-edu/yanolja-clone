@@ -4,6 +4,7 @@ import com.moondysmell.yanoljaclone.domain.Reservation;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto;
 import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepository;
 //import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepositoryCustom;
+import java.util.Date;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,12 @@ public class ReservationService {
          //       .collect(Collectors.toList());
     }
 
+    public int getReservByAccomIdAndDate(int accomId, Date targetDate) {
+        // target date를 포함하고, reserv_status가 reserv_comple인 예약
+         return reservRepositoty.roomCntByAccomIdAndDate(accomId, targetDate);
+
+//         return reservations.size();
+    }
 
     //public int makeReservation()
 }
