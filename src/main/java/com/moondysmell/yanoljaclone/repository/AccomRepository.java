@@ -14,5 +14,6 @@ public interface AccomRepository extends JpaRepository<Accommodation, Any> {
     List<Accommodation> findAllByLocationCode(int locationCode);
     Optional<Accommodation> findOneByAccomCode(String  code);
     List<Accommodation> findAllByAccomCode(String accomCode);
+    List<Accommodation> findAllByLocationCodeAndType(int locationCode, String type);
 
 }
