@@ -4,9 +4,7 @@ import lombok.*;
 
 @Getter
 @AllArgsConstructor
-public enum RoomType {
-    Hotel,
-    Resort,
-    Pension
+public enum PaymentType {
+    cash,
+    card
 }
-
