@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
 @Data
 @Entity
 @NoArgsConstructor
+@ToString(exclude = "reserv")
 @Table(name="accommodation")
 public class Accommodation {
     @Id
