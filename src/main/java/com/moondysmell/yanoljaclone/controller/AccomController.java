@@ -50,8 +50,7 @@ public class AccomController {
     //방 추가
     //필수: accomCode, roomName, roomCnt, price 선택:detail
     @PostMapping("/add/room")
-    public Accommodation addRoom(@RequestBody @Valid RoomAddDto roomAddDto)
-        throws CloneNotSupportedException {
+    public Accommodation addRoom(@RequestBody @Valid RoomAddDto roomAddDto) {
         return accomService.createRoom(roomAddDto);
     }
 

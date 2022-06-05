@@ -28,7 +28,6 @@ import org.springframework.lang.Nullable;
 @Data
 @Entity
 @NoArgsConstructor
-@ToString
 @Table(name="accommodation")
 public class Accommodation {
     @Id
@@ -72,12 +71,6 @@ public class Accommodation {
     public Accommodation copy() {
         Accommodation newAccom = new Accommodation();
 
-        try {
-            newAccom = (Accommodation) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
-
         newAccom.setId(this.id);
         newAccom.setAccomCode(this.accomCode);
         newAccom.setAccomName(this.accomName);
@@ -108,4 +101,5 @@ public class Accommodation {
     public void updateDetail(String detail){
         this.detail = detail;
     }
+
 }

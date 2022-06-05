@@ -4,9 +4,11 @@ import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class RoomAddDto {
     @Id
     @NotBlank
@@ -21,6 +23,5 @@ public class RoomAddDto {
     @Min(value = 0)
     private int price;
 
-    private String detail;
 
 }

@@ -68,7 +68,7 @@ public class AccomService {
 
 
 
-    public Accommodation createRoom(RoomAddDto roomAddDto) throws CloneNotSupportedException {
+    public Accommodation createRoom(RoomAddDto roomAddDto) {
         List<Accommodation> accomList = accomRepository.findAllByAccomCode(roomAddDto.getAccomCode());
 
         if (accomList.size() == 0)
@@ -79,7 +79,6 @@ public class AccomService {
         newRoomAccom.setRoomName(roomAddDto.getRoomName());
         newRoomAccom.setRoomCnt(roomAddDto.getRoomCnt());
         newRoomAccom.setPrice(roomAddDto.getPrice());
-//        newRoomAccom.setDetail(roomAddDto.getDetail().isBlank()? targetAccom.get().getDetail() : newRoomAccom.getDetail() );
 
         try {
             newRoomAccom =accomRepository.save(newRoomAccom);
