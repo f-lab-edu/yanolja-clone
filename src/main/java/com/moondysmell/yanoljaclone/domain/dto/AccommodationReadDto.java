@@ -20,7 +20,7 @@ import lombok.Getter;
 @Getter
 public class AccommodationReadDto {
     @Id
-    private Long id;
+    private int id;
 
     private String accomCode;
 
