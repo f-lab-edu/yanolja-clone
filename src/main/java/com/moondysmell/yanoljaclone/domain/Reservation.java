@@ -48,6 +48,7 @@ public class Reservation  {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Setter
     private ReservStatus reserv_status;
 
     @Builder(builderMethodName = "createReservation")

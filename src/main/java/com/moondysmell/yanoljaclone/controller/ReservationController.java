@@ -43,11 +43,7 @@ public class ReservationController {
            //수정 필요
            return "makeReservarion";
 
-
     }
-
-
-
 
 
     //한 유저에 대한 예약 내역
@@ -66,5 +62,10 @@ public class ReservationController {
 
     }
 
+    @PutMapping("/cancle/{reserv_id}")
+    public ResponseEntity<Void> cancleReservation(@PathVariable int reserv_id){
+            reservService.cancleReservation(reserv_id);
+        return new ResponseEntity( HttpStatus.OK);
+    }
 
 }

@@ -93,6 +93,17 @@ public class ReservationService {
         return new ReservationResponseDto(newReserv);
     }
 
+    @Transactional
+    public void cancleReservation(int reserv_id){
+        //예약 취소 시 상태값만 변경 (reserv_complete -> reserve_cancle)
+        Reservation reservation = reservRepositoty.findById(reserv_id).get();
+        if(reservation.getReserv_status() == ReservStatus.reserv_complete) {
+            reservation.setReserv_status(ReservStatus.reserve_cancle);
+        }
+        reservRepositoty.save(reservation);
+
+    }
+
     public int getReservByAccomIdAndDate(int accomId, Date targetDate) {
         // target date를 포함하고, reserv_status가 reserv_comple인 예약
         Optional<Integer> cnt = reservRepositoty.roomCntByAccomIdAndDate(accomId, targetDate);
