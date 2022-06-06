@@ -3,6 +3,7 @@ package com.moondysmell.yanoljaclone.accommodation;
 
 import static java.util.stream.Collectors.toSet;
 
+import com.moondysmell.yanoljaclone.common.CommonResponse;
 import com.moondysmell.yanoljaclone.controller.AccomController;
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.RoomType;
@@ -20,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
 @Slf4j
@@ -93,8 +94,16 @@ public class AccomTest {
     @Test
     public void getRoomByDateAccomCode() {
 
-        List<EmptyRoomDto> emtpyRoomDtos = accomController.getRoomByDate("2022-06-06", "2022-06-07", "f7b3db9c");
-        log.info("EmptyRoomDtoList 사이즈: " + emtpyRoomDtos.size());
-        log.info("EmptyRoomDto 1개: " + emtpyRoomDtos.get(0).toString());
+        ResponseEntity<CommonResponse> emtpyRoomDtos = accomController.getRoomByDate("2022-06-07", "2022-06-08", "f7b3db9c");
+        log.info("EmptyRoomDtoList 사이즈: " + emtpyRoomDtos.getBody().getAttribute().size());
+        log.info("EmptyRoomDto " + emtpyRoomDtos.getBody().getAttribute().toString());
     }
+
+//    @Test
+//    public void testException() throws CustomException {
+//        ErrorResponse response = ErrorResponse.of(ErrorCode.UNKNOWN_ERROR);
+//        log.info("response >>> " + response.toString());
+//
+//        throw new CustomException(ErrorCode.UNKNOWN_ERROR);
+//    }
 }
