@@ -59,7 +59,6 @@ public class AccomTest {
     @Test
     public void addAccom() {
         AccomAddDto newAccom = AccomAddDto.builder()
-                                              .accomCode(accomService.createAccomCode())
                                               .accomName("산속의산")
                                               .locationCode(20)
                                               .address("인천 계양구")
@@ -76,9 +75,9 @@ public class AccomTest {
     public void addRoom() {
         RoomAddDto newRoom = RoomAddDto.builder()
                                             .accomCode("37c678ac")
-                                            .roomName("대형방")
-                                            .roomCnt(1)
-                                            .price(100000)
+                                            .roomName("중형방")
+                                            .roomCnt(5)
+                                            .price(70000)
                                             .build();
 
         Accommodation createdRoom = accomService.createRoom(newRoom);

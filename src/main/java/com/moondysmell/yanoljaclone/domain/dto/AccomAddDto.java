@@ -12,9 +12,6 @@ import lombok.Getter;
 public class AccomAddDto {
     @Id
     @NotBlank
-    private String accomCode;
-
-    @NotBlank
     private String accomName;
 
     @NotNull
@@ -34,6 +31,8 @@ public class AccomAddDto {
 
     @Min(value = 0)
     private int price;
+
+    private String detail;
 
 
 }

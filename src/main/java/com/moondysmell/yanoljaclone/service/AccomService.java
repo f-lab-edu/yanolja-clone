@@ -117,7 +117,7 @@ public class AccomService {
 
 
     public Accommodation createAccom(AccomAddDto accom) {
-        Accommodation newAccom = new Accommodation();
+//        Accommodation newAccom = new Accommodation();
         String accomCode = createAccomCode();
         String roomType =  RoomType.valueOf(accom.getType()).toString();
 
@@ -125,15 +125,17 @@ public class AccomService {
         if (locationCode.isEmpty())
             throw new RuntimeException("Location Code가 존재하지 않습니다.");
 
-        newAccom.setAccomCode(accomCode);
-        newAccom.setAccomName(accom.getAccomName());
-//        newAccom.setLocationCode(locationCode.get());
-        newAccom.setLocationCode(accom.getLocationCode());
-        newAccom.setAddress(accom.getAddress());
-        newAccom.setType(roomType);
-        newAccom.setRoomName(accom.getRoomName());
-        newAccom.setRoomCnt(accom.getRoomCnt());
-        newAccom.setPrice(accom.getPrice());
+        Accommodation newAccom = Accommodation.builder()
+                                     .accomCode(accomCode)
+                                     .accomName(accom.getAccomName())
+                                     .locationCode(accom.getLocationCode())
+                                     .address(accom.getAddress())
+                                     .type(roomType)
+                                     .roomName(accom.getRoomName())
+                                     .roomCnt(accom.getRoomCnt())
+                                     .price(accom.getPrice())
+                                     .detail(accom.getDetail())
+                                     .build();
 
         return accomRepository.save(newAccom);
 
