@@ -4,23 +4,23 @@ import org.springframework.http.HttpStatus;
 
 public class CustomException extends RuntimeException {
 
-    private ErrorCode errorCode;
+    private CommonCode commonCode;
 
-    public CustomException(String message, ErrorCode errorCode) {
+    public CustomException(String message, CommonCode commonCode) {
         super(message);
-        this.errorCode = errorCode;
+        this.commonCode = commonCode;
     }
 
-    public CustomException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+    public CustomException(CommonCode commonCode) {
+        super(commonCode.getMessage());
+        this.commonCode = commonCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return this.errorCode;
+    public CommonCode getErrorCode() {
+        return this.commonCode;
     }
 
     public HttpStatus getHttpStatus() {
-        return HttpStatus.valueOf(this.errorCode.getStatus());
+        return HttpStatus.valueOf(this.commonCode.getStatus());
     }
 }

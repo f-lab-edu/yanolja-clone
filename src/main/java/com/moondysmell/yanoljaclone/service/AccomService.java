@@ -6,7 +6,7 @@ import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
 import com.moondysmell.yanoljaclone.domain.dto.EmptyRoomDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
 import com.moondysmell.yanoljaclone.exception.CustomException;
-import com.moondysmell.yanoljaclone.exception.ErrorCode;
+import com.moondysmell.yanoljaclone.exception.CommonCode;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
 import java.time.LocalDate;
@@ -42,20 +42,20 @@ public class AccomService {
     public List<Accommodation> findAllByLocationCode(int locationCode) {
         Optional<LocationCode> location= locationCodeRepository.findById(locationCode);
         if (location.isEmpty())
-            throw new CustomException(ErrorCode.LOCATION_CODE_NOT_EXIST);
+            throw new CustomException(CommonCode.LOCATION_CODE_NOT_EXIST);
         return accomRepository.findAllByLocationCode(location.get().getCode());
     }
 
     public List<Accommodation> findAllByTypeAndLocationCode(String type, int locationCode) {
         Optional<LocationCode> location= locationCodeRepository.findById(locationCode);
         if (location.isEmpty())
-            throw new CustomException(ErrorCode.LOCATION_CODE_NOT_EXIST);
+            throw new CustomException(CommonCode.LOCATION_CODE_NOT_EXIST);
 
         try{
             RoomType typevalid = RoomType.valueOf(type);
         }catch (IllegalArgumentException e) {
             log.error(">>> " + e.getMessage());
-            throw new CustomException(ErrorCode.ACCOM_TYPE_NOT_EXIST);
+            throw new CustomException(CommonCode.ACCOM_TYPE_NOT_EXIST);
         }
 
         return accomRepository.findAllByLocationCodeAndType(locationCode, type);
@@ -64,7 +64,7 @@ public class AccomService {
     public List<EmptyRoomDto> findAllRoomByCodeAndDate(String accomCode, LocalDate from) {
         List<Accommodation> accommodationList = accomRepository.findAllByAccomCode(accomCode);
         if (accommodationList.size() == 0)
-            throw new CustomException(ErrorCode.ACCOMCODE_NOT_EXIST);
+            throw new CustomException(CommonCode.ACCOMCODE_NOT_EXIST);
 
         List<EmptyRoomDto> result = new ArrayList<>();
         Date targetDate = java.sql.Date.valueOf(from);
@@ -92,7 +92,7 @@ public class AccomService {
     public int countEmptyRoomsByAccomIdAndDate(int accomId, LocalDate from, LocalDate to) {
         Optional<Accommodation> targetAccom = accomRepository.findById(accomId);
         if (targetAccom.isEmpty())
-            throw new CustomException(ErrorCode.ACCOM_ID_NOT_EXIST);
+            throw new CustomException(CommonCode.ACCOM_ID_NOT_EXIST);
 
         int emptyRoomResult = 9999;
         int totalRoomCnt = targetAccom.get().getRoomCnt();

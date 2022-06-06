@@ -2,13 +2,16 @@ package com.moondysmell.yanoljaclone.controller;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toSet;
+
+import com.moondysmell.yanoljaclone.common.SuccessCode;
+import com.moondysmell.yanoljaclone.common.CommonResponse;
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
 import com.moondysmell.yanoljaclone.domain.dto.EmptyRoomDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
 import com.moondysmell.yanoljaclone.exception.CustomException;
-import com.moondysmell.yanoljaclone.exception.ErrorCode;
+import com.moondysmell.yanoljaclone.exception.CommonCode;
 import com.moondysmell.yanoljaclone.service.AccomService;
 import com.moondysmell.yanoljaclone.service.LocationCodeService;
 import java.time.LocalDate;
@@ -18,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
@@ -32,27 +36,31 @@ public class AccomController {
 
     //CustomException 쓰는 방법
     @GetMapping("/errorTest")
-    public String errorTest(@RequestParam("b") boolean b) {
+    public ResponseEntity<CommonResponse<String>> errorTest(@RequestParam("b") boolean b) {
         if (b) {
-            return "성공";
+            return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS));
         } else
-            throw new CustomException(ErrorCode.UNKNOWN_ERROR);
+            throw new CustomException(CommonCode.UNKNOWN_ERROR);
     }
 
     //지역 코드로 숙소 검색
     @GetMapping("/accom/getByLocation")
-    public Map<String, Set<Accommodation>> getAccomByLocation(@RequestParam int locationCode) throws Exception {
+    public ResponseEntity<CommonResponse<Set<Accommodation>>> getAccomByLocation(@RequestParam int locationCode) throws Exception {
         List<Accommodation> accomList = accomService.findAllByLocationCode(locationCode);
-        return accomList.stream()
+        Map<String, Set<Accommodation>> result = accomList.stream()
                    .collect(Collectors.groupingBy(Accommodation::getAccomCode, toSet()));
+
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, result));
     }
 
     //지역 코드와 숙소 타입으로 숙소 검색
     @GetMapping("/accom/getByTypeLocation")
-    public Map<String, Set<Accommodation>> getAccomByTypeLocation(@RequestParam int locationCode, @RequestParam String locationType) throws Exception {
+    public ResponseEntity<CommonResponse<Set<Accommodation>>> getAccomByTypeLocation(@RequestParam int locationCode, @RequestParam String locationType) throws CustomException {
         List<Accommodation> accomList = accomService.findAllByTypeAndLocationCode(locationType, locationCode);
-        return accomList.stream()
-                   .collect(Collectors.groupingBy(Accommodation::getAccomCode, toSet()));
+        Map<String, Set<Accommodation>> result = accomList.stream()
+                                                     .collect(Collectors.groupingBy(Accommodation::getAccomCode, toSet()));
+
+        return ResponseEntity.ok(new CommonResponse<>(CommonCode.SUCCESS, result));
     }
 
     // 예약가능한 방 검색(숙소 코드와 날짜를 기준으로 검색)
