@@ -72,16 +72,16 @@ public class AccomController {
         //to - from => 최대 7일. 7일보다 길어질 경우 숙소에 직접 문의
         // to는 최대 한달 후까지 가능
         if (fromDate.isAfter(toDate))
-            throw new RuntimeException("체크아웃 날짜는 체크인 날짜보다 미래여야 합니다");
+            throw new CustomException(CommonCode.CHECKIN_CHECKOUT_REVERSE_ERROR);
 
         if (fromDate.isBefore(LocalDate.now()))
-            throw new RuntimeException("체크인 날짜는 과거가 될 수 없습니다.");
+            throw new CustomException(CommonCode.CHECKIN_IS_PAST_ERROR);
 
         if (DAYS.between(fromDate,toDate) > 7)
-            throw new RuntimeException("체크인 날짜와 체크아웃 날짜의 차이는 7일 이하여야 합니다.");
+            throw new CustomException(CommonCode.CHECKIN_CHECKOUT_TOO_FAR_ERROR);
 
         if (toDate.isAfter(LocalDate.now().plusMonths(1)) && fromDate.isAfter(LocalDate.now().plusMonths(1)))
-            throw new RuntimeException("한달 이내의 날짜만 예약 가능합니다. 체크인, 체크아웃 날짜를 확인해주세요.");
+            throw new CustomException(CommonCode.CHECKIN_CHECKOUT_OUT_OF_RANGE_ERROR);
 
         //대략적인 예약수만 확인 (from 날짜 하루만 예약수 확인)
         return accomService.findAllRoomByCodeAndDate(accomCode, fromDate);
