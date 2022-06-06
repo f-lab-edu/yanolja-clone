@@ -1,6 +1,9 @@
 package com.moondysmell.yanoljaclone.controller;
 
+import com.moondysmell.yanoljaclone.domain.PaymentType;
 import com.moondysmell.yanoljaclone.domain.Reservation;
+import com.moondysmell.yanoljaclone.domain.TransType;
+import com.moondysmell.yanoljaclone.domain.dto.ReservationMakeDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationRequestDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto;
 import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepository;
@@ -34,19 +37,21 @@ public class ReservationController {
    // private final ReservationRepository reservRepository;
 
 
-   /* @PostMapping("/make")
-    public ResponseEntity<Reservation> makeReservarion(@RequestBody Reservation reserv, @ModelAttribute ReservationRequestDto reservRequestDto, RedirectAttributes redirectAttributes) {
-       try {
-            //Reservation reserv = reservRepository.save(new Reservation(reserv.getUser().getName(), reserv.getUser().getPhone_num(),reserv.getTrans_type(), reserv.getCheckin(), reserv.getCheckout(), reserv.getPayment_type(), reserv.getAccom().getPrice(), );
-            //Reservation reserv = reservRepository.save(new Reservation( ));
-            //return new ResponseEntity<>();
-           int makeReservationId = reservService.r
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping("/make")
+    public String makeReservarion(@RequestBody ReservationMakeDto reservationMakeDto) {
 
-        Reservation reserv = reservRepository.findByAccomAndUser()
-    }*/
+           String userName = reservationMakeDto.getUserName();
+           String phoneNum = reservationMakeDto.getPhoneNum();
+           TransType transType = reservationMakeDto.getTransType();
+           PaymentType paymentType =  reservationMakeDto.getPaymentType();
+
+           ReservationResponseDto reservedResult = reservService.reserv(reservationMakeDto);
+
+           //수정 필요
+           return "makeReservarion";
+
+
+    }
 
 
 

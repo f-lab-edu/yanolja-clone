@@ -15,11 +15,10 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
+    private Integer user_id;
 
     @Column(nullable = false)
     private String name;
-
 
     @Column(nullable = false)
     private String phone_num;
@@ -27,12 +26,14 @@ public class Customer {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Reservation> reserv = new ArrayList<>();
 
-    @Builder
-     public Customer(final int user_id, final String name, final String phone_num) {
-        this.user_id = user_id;
+    @Builder(builderMethodName = "createUser")
+     public Customer(String name, String phone_num) {
         this.name = name;
         this.phone_num = phone_num;
     }
+
+
+
 
 
 

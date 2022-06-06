@@ -1,6 +1,10 @@
 package com.moondysmell.yanoljaclone.reservation;
 
+import com.moondysmell.yanoljaclone.domain.PaymentType;
+import com.moondysmell.yanoljaclone.domain.ReservStatus;
 import com.moondysmell.yanoljaclone.domain.Reservation;
+import com.moondysmell.yanoljaclone.domain.TransType;
+import com.moondysmell.yanoljaclone.domain.dto.ReservationMakeDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto;
 import com.moondysmell.yanoljaclone.service.ReservationService;
 import org.junit.jupiter.api.Test;
@@ -9,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,25 +25,36 @@ class ReservationServiceTest {
 	private ReservationService reservService;
 	//private ReservationRepository reservRepository;
 
-	/*@Test
+	@Test
 	public void create(){
-		Reservation reserv = new Reservation();
 
-		Reservation newReserv = reservRepository.save(reserv);
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+		ReservationMakeDto reservationMakeDto = new ReservationMakeDto();
 
 
-		Assertions.assertNotNull(newReserv);
+		reservationMakeDto.setAccomId(1);
+		reservationMakeDto.setUserName("hyang");
+		reservationMakeDto.setPhoneNum("01011112222");
+		reservationMakeDto.setCheckin(date);
+		reservationMakeDto.setCheckout(date);
+		reservationMakeDto.setTransType(TransType.car);
+		reservationMakeDto.setPaymentType(PaymentType.card);
+		reservationMakeDto.setRoomCnt(1);
+		reservationMakeDto.setReservStatus(ReservStatus.reserv_complete);
+		//reservService.reserv()
 		/*Reservation reserv = new Reservation().builder()
 				.checkin("2021-05-21")
 				.chechout("2021-05-24")
 
 				.email(email)
 				.userOauthType(userOauthType)
-				.build();
-		reservationService.makeReservaion(reserv)
+				.build();*/
+		reservService.reserv(reservationMakeDto);
 
 }
-		 */
+
 
 
 
