@@ -7,6 +7,8 @@ import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
 import com.moondysmell.yanoljaclone.domain.dto.EmptyRoomDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
+import com.moondysmell.yanoljaclone.exception.CustomException;
+import com.moondysmell.yanoljaclone.exception.ErrorCode;
 import com.moondysmell.yanoljaclone.service.AccomService;
 import com.moondysmell.yanoljaclone.service.LocationCodeService;
 import java.time.LocalDate;
@@ -28,6 +30,14 @@ public class AccomController {
     private final AccomService accomService;
     private final LocationCodeService locationCodeService;
 
+    //CustomException 쓰는 방법
+    @GetMapping("/errorTest")
+    public String errorTest(@RequestParam("b") boolean b) {
+        if (b) {
+            return "성공";
+        } else
+            throw new CustomException(ErrorCode.UNKNOWN_ERROR);
+    }
 
     //지역 코드로 숙소 검색
     @GetMapping("/accom/getByLocation")
