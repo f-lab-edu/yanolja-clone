@@ -9,14 +9,20 @@ import lombok.Getter;
 public enum CommonCode {
     // SUCCESS
     SUCCESS(200, 200, "성공"),
-    // COMMON
+    // FAIL
     FAIL(500, -1, "실패. 알 수 없는 오류"),
-
 
     //-1000:Accom
     ACCOM_TYPE_NOT_EXIST(400,-1000, "존재하지 않는 Type입니다."),
     ACCOMCODE_NOT_EXIST(400, -1001, "accomCode에 해당하는 숙소가 없습니다."),
     ACCOM_ID_NOT_EXIST(400, -1002, "accomId가 존재하지 않습니다. "),
+    CHECKIN_CHECKOUT_REVERSE_ERROR(400, -1003, "체크아웃 날짜는 체크인 날짜보다 미래여야 합니다"),
+    CHECKIN_IS_PAST_ERROR(400, -1004, "체크인 날짜는 과거가 될 수 없습니다."),
+    CHECKIN_CHECKOUT_TOO_FAR_ERROR(400, -1005, "체크인 날짜와 체크아웃 날짜의 차이는 7일 이하여야 합니다."),
+    CHECKIN_CHECKOUT_OUT_OF_RANGE_ERROR(400, -1006, "한 달 이내의 날짜만 예약 가능합니다. 체크인, 체크아웃 날짜를 확인해주세요."),
+    //-2000:Reservation
+
+    //-3000: Customer
 
     //-2000:Reservation
     AVAILABLE_ROOM_IS_NOT_EXIST(400, -2000,"예약가능한 방이 존재하지 않습니다."),
@@ -40,5 +46,4 @@ public enum CommonCode {
         this.message = message;
         this.code = code;
     }
-
 }
