@@ -4,6 +4,7 @@ import com.moondysmell.yanoljaclone.domain.Reservation;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationRequestDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto;
 import java.util.Date;
+import java.util.Optional;
 import org.hibernate.mapping.Any;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,6 +38,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Any> {
 
     @Query("select sum(r.room_cnt) from Reservation r "
                + "where r.accom.id = :accomId and r.checkin <= :targetDate and r.checkout > :targetDate and r.reserv_status = 'reserv_complete'")
-    int roomCntByAccomIdAndDate(@Param("accomId") int accomId, @Param("targetDate") Date targetDate);
+    Optional<Integer> roomCntByAccomIdAndDate(@Param("accomId") int accomId, @Param("targetDate") Date targetDate);
 
 }

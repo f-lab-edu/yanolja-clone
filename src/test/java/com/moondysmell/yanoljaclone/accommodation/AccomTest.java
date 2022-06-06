@@ -3,15 +3,15 @@ package com.moondysmell.yanoljaclone.accommodation;
 
 import static java.util.stream.Collectors.toSet;
 
+import com.moondysmell.yanoljaclone.controller.AccomController;
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.RoomType;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
+import com.moondysmell.yanoljaclone.domain.dto.EmptyRoomDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
-import com.moondysmell.yanoljaclone.repository.AccommodationRepository;
 import com.moondysmell.yanoljaclone.service.AccomService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @SpringBootTest
 @Slf4j
@@ -27,6 +28,9 @@ public class AccomTest {
 
     @Autowired
     private AccomService accomService;
+
+    @Autowired
+    private AccomController accomController;
 
     @Test
     public void getAllByLocation() {
@@ -88,7 +92,16 @@ public class AccomTest {
         LocalDate from = LocalDate.parse("2022-06-06", DateTimeFormatter.ISO_DATE);
         LocalDate to = LocalDate.parse("2022-06-08", DateTimeFormatter.ISO_DATE);
 
-        int emptyRoomCnt = accomService.countEmptyRoomsByAccomId(1,from, to);
+        int emptyRoomCnt = accomService.countEmptyRoomsByAccomIdAndDate(1,from, to);
         log.info("result: " + emptyRoomCnt);
+    }
+
+
+    @Test
+    public void getRoomByDateAccomCode() {
+
+        List<EmptyRoomDto> emtpyRoomDtos = accomController.getRoomByDate("2022-06-06", "2022-06-07", "f7b3db9c");
+        log.info("EmptyRoomDtoList 사이즈: " + emtpyRoomDtos.size());
+        log.info("EmptyRoomDto 1개: " + emtpyRoomDtos.get(0).toString());
     }
 }

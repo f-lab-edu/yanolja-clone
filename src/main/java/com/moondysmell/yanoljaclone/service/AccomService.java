@@ -3,11 +3,12 @@ import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.RoomType;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
+import com.moondysmell.yanoljaclone.domain.dto.EmptyRoomDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -58,17 +59,35 @@ public class AccomService {
         return accomRepository.findAllByLocationCodeAndType(locationCode, type);
     }
 
-//    public List<Accommodation> findAllByDate(String from, String to) {
-//        //to - from => 최대 7일. 7일보다 길어질 경우 숙소에 직접 문의
-//        // from은 현재보다 더 과거로 갈 수 없음
-//        // to는 최대 한달 후? 다음달 까지 가능
-//        // from 부터 to까지 모든 날짜를 다 List로 만들어 놓고 for문 돌려야함
-//        int reservedCnt = reservationService.getReservByAccomIdAndDate();
-//
-//    }
+    public List<EmptyRoomDto> findAllRoomByCodeAndDate(String accomCode, LocalDate from) {
+        List<Accommodation> accommodationList = accomRepository.findAllByAccomCode(accomCode);
+        if (accommodationList.size() == 0)
+            throw new RuntimeException("accomCode에 해당하는 숙소가 없습니다.");
+
+        List<EmptyRoomDto> result = new ArrayList<>();
+        Date targetDate = java.sql.Date.valueOf(from);
+
+        //대략적인 예약수만 확인 (from 날짜 하루만 예약수 확인). 정확한 빈 방 계산은 예약하는 시점에 실행
+        for (Accommodation accom : accommodationList) {
+            int totalRoomCnt = accom.getRoomCnt();
+            int reservedCnt = reservationService.getReservByAccomIdAndDate(accom.getId(), targetDate);
+            EmptyRoomDto room = EmptyRoomDto.builder()
+                           .id(accom.getId())
+                           .accomCode(accom.getAccomCode())
+                           .accomName(accom.getAccomName())
+                           .address(accom.getAddress())
+                           .roomName(accom.getRoomName())
+                           .emptyRoomCnt(totalRoomCnt - reservedCnt)
+                           .price(accom.getPrice())
+                           .build();
+            result.add(room);
+        }
+
+        return result;
+    }
 
     //reservationService 에서 예약 가능한지 확인할 때 사용하는 함수
-    public int countEmptyRoomsByAccomId(int accomId, LocalDate from, LocalDate to) {
+    public int countEmptyRoomsByAccomIdAndDate(int accomId, LocalDate from, LocalDate to) {
         Optional<Accommodation> targetAccom = accomRepository.findById(accomId);
         if (targetAccom.isEmpty())
             throw new RuntimeException("accomId 가 존재하지 않습니다. 다시 확인해주세요");
@@ -76,6 +95,7 @@ public class AccomService {
         int emptyRoomResult = 9999;
         int totalRoomCnt = targetAccom.get().getRoomCnt();
 
+        // from 부터 to까지 모든 날짜를 다 List로 만들어 놓고 for문 돌림
         List<LocalDate> listOfDates = from.datesUntil(to)
                                           .collect(Collectors.toList());
         log.info("from과 to의 날짜 차이: " + listOfDates.size());
