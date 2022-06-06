@@ -6,20 +6,15 @@ import com.moondysmell.yanoljaclone.domain.TransType;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationMakeDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationRequestDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto;
-import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepository;
 import com.moondysmell.yanoljaclone.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,7 +26,7 @@ public class ReservationController {
 
 
     @PostMapping("/make")
-    public String makeReservarion(@RequestBody ReservationMakeDto reservationMakeDto) {
+    public ResponseEntity<ReservationResponseDto> makeReservarion(@RequestBody ReservationMakeDto reservationMakeDto) {
 
            String userName = reservationMakeDto.getUserName();
            String phoneNum = reservationMakeDto.getPhoneNum();
@@ -40,14 +35,11 @@ public class ReservationController {
 
            ReservationResponseDto reservedResult = reservService.reserv(reservationMakeDto);
 
-           //수정 필요
-           return "makeReservarion";
+           if(reservedResult != null) return ResponseEntity.ok(reservedResult);
+           else return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
 
 
     }
-
-
-
 
 
     //한 유저에 대한 예약 내역
@@ -60,11 +52,15 @@ public class ReservationController {
 
         List<ReservationResponseDto> reservedResult = reservService.getReservedResult(user_name, reserv_id, phone_num);
 
-        if(reservedResult.isEmpty()){
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }else return  new ResponseEntity<>(reservedResult, HttpStatus.OK);
+        if(reservedResult.isEmpty()) return new ResponseEntity(HttpStatus.NO_CONTENT);
+        else return  new ResponseEntity<>(reservedResult, HttpStatus.OK);
 
     }
 
+    @PostMapping("/cancle")
+    public ResponseEntity<Reservation> cancleReservation(@RequestParam int reserv_id){
+           Reservation reservedResult = reservService.cancleReservation(reserv_id);
+        return new ResponseEntity<>(reservedResult, HttpStatus.OK);
+    }
 
 }

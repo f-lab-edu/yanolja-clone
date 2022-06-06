@@ -1,9 +1,10 @@
 package com.moondysmell.yanoljaclone.service;
 
+import com.moondysmell.yanoljaclone.common.CommonCode;
+import com.moondysmell.yanoljaclone.common.CustomException;
 import com.moondysmell.yanoljaclone.domain.*;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationMakeDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto;
-import com.moondysmell.yanoljaclone.exception.NotEnoughRoomException;
 import com.moondysmell.yanoljaclone.repository.AccommodationRepository;
 import com.moondysmell.yanoljaclone.repository.UserRepository;
 import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepository;
@@ -15,14 +16,10 @@ import java.util.Optional;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,6 +27,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly=true)
 @RequiredArgsConstructor
 public class ReservationService {
+
     @Autowired
     private final AccommodationRepository accomRepository;
 
@@ -42,10 +40,21 @@ public class ReservationService {
     @Transactional
     public List<ReservationResponseDto> getReservedResult(String name, int reserv_id, String phone_num){
 
-        List<ReservationResponseDto> reservList = reservRepositoty.findReservedDetail(name, reserv_id, phone_num);
+        //회원T에 해당회원정보가 있는지 확인, 없으면 예외처리
+        Customer customer = userRepository.findByNameAndPhoneNum(name,phone_num).orElseThrow(() -> {
+                    throw new CustomException(CommonCode.CUSTOMER_IS_NOT_EXIST);
+        });
+
+        //예약번호 확인
+        Reservation reservation = reservRepositoty.findById(reserv_id).orElseThrow(() -> {
+            throw new CustomException(CommonCode.RRSERV_ID_IS_NOT_EXIST);
+        });
+
+
+        List<ReservationResponseDto> reservList = reservRepositoty.findReservedDetail(customer.getName(), reservation.getReserv_id(), customer.getPhoneNum());
 
         if(reservList.isEmpty()){
-            throw new IllegalArgumentException("예약 내역이 존재하지 않습니다.");
+            throw new CustomException(CommonCode.RESERVATION_IS_NOT_EXIST);
         }
 
         return reservList;
@@ -54,6 +63,7 @@ public class ReservationService {
     @Transactional
     public ReservationResponseDto reserv(ReservationMakeDto reservationMakeDto) {
         Reservation newReserv = reservationMakeDto.toReservationEntity();
+
         int accomId = reservationMakeDto.getAccomId();
         String userName = reservationMakeDto.getUserName();
         String phoneNum = reservationMakeDto.getPhoneNum();
@@ -64,14 +74,13 @@ public class ReservationService {
 
         Accommodation targetAccom = accomRepository.findById(accomId).orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException("해당 숙박업소를 조회할 수 없습니다.");
+                    throw new CustomException(CommonCode.ACCOM_ID_NOT_EXIST);
                 }
         );
 
         //예약가능한 날짜와 방
         int emptyRoomCnt = countEmptyRoomsByAccomIdAndDate(accomId, checkin, checkout);
-        if (emptyRoomCnt < roomCnt) throw new NotEnoughRoomException();
-
+        if (emptyRoomCnt < roomCnt) throw new CustomException(CommonCode.AVAILABLE_ROOM_IS_NOT_EXIST);
 
         //예약내역 입력과 동시에 customerTable에 customer정보 insert
         //입력한 customer객체의 정보를 예약 등록하는 내역에 설정
@@ -82,15 +91,25 @@ public class ReservationService {
                 .phoneNum(reservationMakeDto.getPhoneNum())
                 .build());
 
-
         newReserv.addCustomer(customer);
         newReserv.setAccom(targetAccom);
 
         newReserv = reservRepositoty.save(newReserv);
 
-
-
         return new ReservationResponseDto(newReserv);
+    }
+
+    @Transactional
+    public Reservation cancleReservation(int reserv_id){
+        //예약 취소 시 상태값만 변경 (reserv_complete -> reserve_cancle)
+        Reservation reservation = reservRepositoty.findById(reserv_id).get();
+        if(reservation.getReserv_status() == ReservStatus.reserv_complete) {
+            reservation.setReserv_status(ReservStatus.reserve_cancle);
+        }else{
+            throw new CustomException(CommonCode.THIS_RESERVAION_IS_ALREADY_CANCLED);
+        }
+        reservation = reservRepositoty.save(reservation);
+        return reservation;
     }
 
     public int getReservByAccomIdAndDate(int accomId, Date targetDate) {
@@ -98,7 +117,6 @@ public class ReservationService {
         Optional<Integer> cnt = reservRepositoty.roomCntByAccomIdAndDate(accomId, targetDate);
         return cnt.isPresent() ? cnt.get() : 0;
 
-//         return reservations.size();
     }
 
     public LocalDate convertDateToLocalDate(Date dt) {

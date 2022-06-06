@@ -35,8 +35,8 @@ class ReservationServiceTest {
 
 
 		reservationMakeDto.setAccomId(1);
-		reservationMakeDto.setUserName("hyang");
-		reservationMakeDto.setPhoneNum("01011112222");
+		reservationMakeDto.setUserName("kkk");
+		reservationMakeDto.setPhoneNum("01012223333");
 		reservationMakeDto.setCheckin(date);
 		reservationMakeDto.setCheckout(date);
 		reservationMakeDto.setTransType(TransType.car);
@@ -66,6 +66,13 @@ class ReservationServiceTest {
 
 		List<ReservationResponseDto> reserv = reservService.getReservedResult("kkk",1,"01022223333");
 		//ReservationResponseDto reserv = reservService.getReservedResult("smell",1,"01022223333");
+	}
+
+	@Test
+	public void cancle(){
+
+		reservService.cancleReservation(1);
+
 	}
 
 

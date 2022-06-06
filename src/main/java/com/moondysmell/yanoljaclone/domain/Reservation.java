@@ -1,5 +1,6 @@
 package com.moondysmell.yanoljaclone.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -8,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"accommodation", "customer"})
 @Getter
 @Table(name="reservation")
 public class Reservation  {
@@ -19,12 +20,14 @@ public class Reservation  {
 
     //Resionvation : Member = N : 1
     @ManyToOne(targetEntity= Customer.class, cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private Customer customer;
 
     //Resionvation : Accommodation = N : 1
     @ManyToOne(targetEntity=Accommodation.class)
     @JoinColumn(name= "id")
+    @JsonIgnore
     private Accommodation accom;
 
     @Temporal(TemporalType.DATE)
@@ -48,6 +51,7 @@ public class Reservation  {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Setter
     private ReservStatus reserv_status;
 
     @Builder(builderMethodName = "createReservation")
