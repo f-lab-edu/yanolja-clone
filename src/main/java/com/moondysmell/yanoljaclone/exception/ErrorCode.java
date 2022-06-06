@@ -7,7 +7,15 @@ public enum ErrorCode {
 
     //common
     INVALID_CODE(400, "C001", "Invalid Code"),
-    NOT_ENOUGH_ROOM(401,"C002","No Room Anymore");
+
+    //1000:Accom
+    NOT_ENOUGH_ROOM(2000,"C002","No Room Anymore");
+
+    //2000:Reservation
+
+    //3000: Customer
+
+    //4000: LocationCode
 
     private final String code;
     private final String message;
