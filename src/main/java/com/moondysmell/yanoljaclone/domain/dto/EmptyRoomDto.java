@@ -6,33 +6,26 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
-public class AccomAddDto {
+@ToString
+public class EmptyRoomDto {
     @Id
-    @NotBlank
+    private int id;
+
+    private String accomCode;
+
     private String accomName;
 
-    @NotNull
-    private int locationCode;
-
-    @NotBlank
     private String address;
-
-    @NotBlank
-    private String type;
 
     @NotBlank
     private String roomName;
 
-    @Min(value = 0)
-    private int roomCnt;
+    private int emptyRoomCnt;
 
-    @Min(value = 0)
     private int price;
-
-    private String detail;
-
 
 }

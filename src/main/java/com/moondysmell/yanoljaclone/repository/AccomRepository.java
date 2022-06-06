@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AccomRepository extends JpaRepository<Accommodation, Any> {
+public interface AccomRepository extends JpaRepository<Accommodation, Integer> {
     List<Accommodation> findAllByLocationCode(int locationCode);
     Optional<Accommodation> findOneByAccomCode(String  code);
     List<Accommodation> findAllByAccomCode(String accomCode);

@@ -1,12 +1,15 @@
 package com.moondysmell.yanoljaclone.service;
-
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.RoomType;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
+import com.moondysmell.yanoljaclone.domain.dto.EmptyRoomDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,11 +25,15 @@ import org.springframework.stereotype.Service;
 public class AccomService {
     private final AccomRepository accomRepository;
     private final LocationCodeRepository locationCodeRepository;
+    private final ReservationService reservationService;
+
     @Autowired
     public AccomService(AccomRepository accomRepository,
-                        LocationCodeRepository locationCodeRepository) {
+                        LocationCodeRepository locationCodeRepository,
+                        ReservationService reservationService) {
         this.accomRepository = accomRepository;
         this.locationCodeRepository = locationCodeRepository;
+        this.reservationService = reservationService;
     }
 
 
@@ -52,9 +59,65 @@ public class AccomService {
         return accomRepository.findAllByLocationCodeAndType(locationCode, type);
     }
 
+    public List<EmptyRoomDto> findAllRoomByCodeAndDate(String accomCode, LocalDate from) {
+        List<Accommodation> accommodationList = accomRepository.findAllByAccomCode(accomCode);
+        if (accommodationList.size() == 0)
+            throw new RuntimeException("accomCode에 해당하는 숙소가 없습니다.");
+
+        List<EmptyRoomDto> result = new ArrayList<>();
+        Date targetDate = java.sql.Date.valueOf(from);
+
+        //대략적인 예약수만 확인 (from 날짜 하루만 예약수 확인). 정확한 빈 방 계산은 예약하는 시점에 실행
+        for (Accommodation accom : accommodationList) {
+            int totalRoomCnt = accom.getRoomCnt();
+            int reservedCnt = reservationService.getReservByAccomIdAndDate(accom.getId(), targetDate);
+            EmptyRoomDto room = EmptyRoomDto.builder()
+                           .id(accom.getId())
+                           .accomCode(accom.getAccomCode())
+                           .accomName(accom.getAccomName())
+                           .address(accom.getAddress())
+                           .roomName(accom.getRoomName())
+                           .emptyRoomCnt(totalRoomCnt - reservedCnt)
+                           .price(accom.getPrice())
+                           .build();
+            result.add(room);
+        }
+
+        return result;
+    }
+
+    //reservationService 에서 예약 가능한지 확인할 때 사용하는 함수
+    public int countEmptyRoomsByAccomIdAndDate(int accomId, LocalDate from, LocalDate to) {
+        Optional<Accommodation> targetAccom = accomRepository.findById(accomId);
+        if (targetAccom.isEmpty())
+            throw new RuntimeException("accomId 가 존재하지 않습니다. 다시 확인해주세요");
+
+        int emptyRoomResult = 9999;
+        int totalRoomCnt = targetAccom.get().getRoomCnt();
+
+        // from 부터 to까지 모든 날짜를 다 List로 만들어 놓고 for문 돌림
+        List<LocalDate> listOfDates = from.datesUntil(to)
+                                          .collect(Collectors.toList());
+        log.info("from과 to의 날짜 차이: " + listOfDates.size());
+
+        for (LocalDate ld : listOfDates) {
+            Date targetDate = java.sql.Date.valueOf(ld);
+            int reservedCnt = reservationService.getReservByAccomIdAndDate(accomId, targetDate);
+            int emptyCnt = totalRoomCnt - reservedCnt;
+            emptyRoomResult = (emptyRoomResult > emptyCnt) ? emptyCnt : emptyRoomResult;
+        }
+
+        return emptyRoomResult;
+    }
+
+
+
+
+
+
 
     public Accommodation createAccom(AccomAddDto accom) {
-        Accommodation newAccom = new Accommodation();
+//        Accommodation newAccom = new Accommodation();
         String accomCode = createAccomCode();
         String roomType =  RoomType.valueOf(accom.getType()).toString();
 
@@ -62,15 +125,17 @@ public class AccomService {
         if (locationCode.isEmpty())
             throw new RuntimeException("Location Code가 존재하지 않습니다.");
 
-        newAccom.setAccomCode(accomCode);
-        newAccom.setAccomName(accom.getAccomName());
-//        newAccom.setLocationCode(locationCode.get());
-        newAccom.setLocationCode(accom.getLocationCode());
-        newAccom.setAddress(accom.getAddress());
-        newAccom.setType(roomType);
-        newAccom.setRoomName(accom.getRoomName());
-        newAccom.setRoomCnt(accom.getRoomCnt());
-        newAccom.setPrice(accom.getPrice());
+        Accommodation newAccom = Accommodation.builder()
+                                     .accomCode(accomCode)
+                                     .accomName(accom.getAccomName())
+                                     .locationCode(accom.getLocationCode())
+                                     .address(accom.getAddress())
+                                     .type(roomType)
+                                     .roomName(accom.getRoomName())
+                                     .roomCnt(accom.getRoomCnt())
+                                     .price(accom.getPrice())
+                                     .detail(accom.getDetail())
+                                     .build();
 
         return accomRepository.save(newAccom);
 
