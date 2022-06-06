@@ -1,20 +1,20 @@
 package com.moondysmell.yanoljaclone.domain.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public class AccommodationAddDto {
+@Builder
+public class AccomAddDto {
     @Id
-    @NotBlank(message = "숙소 이름은 필수입니다")
+    @NotBlank
+    private String accomCode;
+
+    @NotBlank
     private String accomName;
 
     @NotNull
@@ -35,6 +35,5 @@ public class AccommodationAddDto {
     @Min(value = 0)
     private int price;
 
-    private String detail;
 
 }

@@ -3,8 +3,8 @@ package com.moondysmell.yanoljaclone.service;
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.RoomType;
-import com.moondysmell.yanoljaclone.domain.dto.AccommodationAddDto;
-import com.moondysmell.yanoljaclone.domain.dto.AccommodationReadDto;
+import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
+import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
 import com.moondysmell.yanoljaclone.repository.AccomRepository;
 import com.moondysmell.yanoljaclone.repository.LocationCodeRepository;
 import java.util.List;
@@ -29,23 +29,31 @@ public class AccomService {
         this.locationCodeRepository = locationCodeRepository;
     }
 
-    public List<LocationCode> findAllLocationCode() {
-        return locationCodeRepository.findAll();
-    }
 
-    public List<Accommodation> findAllDetail() {
-        return accomRepository.findAllDetail();
-    }
     public List<Accommodation> findAllByLocationCode(int locationCode) {
         Optional<LocationCode> location= locationCodeRepository.findById(locationCode);
         if (location.isEmpty())
             throw new RuntimeException("Location Code가 존재하지 않습니다.");
+        return accomRepository.findAllByLocationCode(location.get().getCode());
+    }
 
-        return accomRepository.findAllByLocationCode(location.get());
+    public List<Accommodation> findAllByTypeAndLocationCode(String type, int locationCode) {
+        Optional<LocationCode> location= locationCodeRepository.findById(locationCode);
+        if (location.isEmpty())
+            throw new RuntimeException("Location Code가 존재하지 않습니다.");
+
+        try{
+            RoomType typevalid = RoomType.valueOf(type);
+        }catch (IllegalArgumentException e) {
+            log.error(">>> " + e.getMessage());
+            throw new RuntimeException("type이 존재하지 않습니다.");
+        }
+
+        return accomRepository.findAllByLocationCodeAndType(locationCode, type);
     }
 
 
-    public Accommodation createAccom(AccommodationAddDto accom) {
+    public Accommodation createAccom(AccomAddDto accom) {
         Accommodation newAccom = new Accommodation();
         String accomCode = createAccomCode();
         String roomType =  RoomType.valueOf(accom.getType()).toString();
@@ -56,14 +64,13 @@ public class AccomService {
 
         newAccom.setAccomCode(accomCode);
         newAccom.setAccomName(accom.getAccomName());
-        newAccom.setLocationCode(locationCode.get());
-//        newAccom.setLocationCode(accom.getLocationCode());
+//        newAccom.setLocationCode(locationCode.get());
+        newAccom.setLocationCode(accom.getLocationCode());
         newAccom.setAddress(accom.getAddress());
         newAccom.setType(roomType);
         newAccom.setRoomName(accom.getRoomName());
         newAccom.setRoomCnt(accom.getRoomCnt());
         newAccom.setPrice(accom.getPrice());
-        newAccom.setDetail(accom.getDetail());
 
         return accomRepository.save(newAccom);
 
@@ -73,11 +80,25 @@ public class AccomService {
         return UUID.randomUUID().toString().substring(0,8);
     }
 
-    public List<AccommodationReadDto> convertAccomToReadDto(List<Accommodation> accomList) {
-        return accomList.stream()
-                   .map(accom -> new AccommodationReadDto(accom))
-                   .collect(Collectors.toList());
+
+
+    public Accommodation createRoom(RoomAddDto roomAddDto) {
+        List<Accommodation> accomList = accomRepository.findAllByAccomCode(roomAddDto.getAccomCode());
+
+        if (accomList.size() == 0)
+            throw new RuntimeException("숙소가 존재하지 않습니다.");
+
+        Accommodation newRoomAccom = accomList.get(0).copy();
+        newRoomAccom.setId(null);
+        newRoomAccom.setRoomName(roomAddDto.getRoomName());
+        newRoomAccom.setRoomCnt(roomAddDto.getRoomCnt());
+        newRoomAccom.setPrice(roomAddDto.getPrice());
+
+        try {
+            newRoomAccom =accomRepository.save(newRoomAccom);
+        } catch (Exception e) {
+            log.info(">>> " + e);
+        }
+        return newRoomAccom;
     }
-
-
 }
