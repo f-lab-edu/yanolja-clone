@@ -1,7 +1,6 @@
 package com.moondysmell.yanoljaclone.controller;
 
 import static java.util.stream.Collectors.toSet;
-
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;

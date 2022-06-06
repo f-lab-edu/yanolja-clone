@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,15 +27,18 @@ import org.springframework.lang.Nullable;
 
 
 @Data
+@Builder
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "reserv")
 @Table(name="accommodation")
 public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accommodation_id_seq")
     @SequenceGenerator(name = "accommodation_id_seq", sequenceName = "accommodation_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private Integer id;
+    private Integer id = null;
 
     @Column(name = "accom_code")
     private String accomCode;
@@ -69,18 +73,18 @@ public class Accommodation {
     private List<Reservation> reserv = new ArrayList<>();
 
     public Accommodation copy() {
-        Accommodation newAccom = new Accommodation();
-
-        newAccom.setId(this.id);
-        newAccom.setAccomCode(this.accomCode);
-        newAccom.setAccomName(this.accomName);
-        newAccom.setLocationCode(this.locationCode);
-        newAccom.setAddress(this.address);
-        newAccom.setType(this.type);
-        newAccom.setRoomName(this.roomName);
-        newAccom.setRoomCnt(this.roomCnt);
-        newAccom.setPrice(this.price);
-        newAccom.setDetail(this.detail);
+        Accommodation newAccom = Accommodation.builder()
+                                     .id(this.id)
+                                     .accomCode(this.accomCode)
+                                     .accomName(this.accomName)
+                                     .locationCode(this.locationCode)
+                                     .address(this.address)
+                                     .type(this.type)
+                                     .roomName(this.roomName)
+                                     .roomCnt(this.roomCnt)
+                                     .price(this.price)
+                                     .detail(this.detail)
+                                     .build();
 
         return newAccom;
     }
