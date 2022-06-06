@@ -23,4 +23,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     //ReservationResponseDto findReservedDetail(@Param("name")String name, @Param("reserv_id")int reserv_id, @Param("phone_num")String phone_num);
     List<ReservationResponseDto> findReservedDetail(@Param("name")String name, @Param("reserv_id")int reserv_id, @Param("phone_num")String phone_num);
 
+
+    @Query("select r from Reservation r "
+               + "where r.accom.id = :accomId and r.checkin <= :targetDate and r.checkout > :targetDate and r.reserv_status = 'reserv_complete'")
+    List<Reservation> findAllByAccomIdAndDate(@Param("accomId") int accomId, @Param("targetDate") Date targetDate);
+
+    @Query("select sum(r.room_cnt) from Reservation r "
+               + "where r.accom.id = :accomId and r.checkin <= :targetDate and r.checkout > :targetDate and r.reserv_status = 'reserv_complete'")
+    Optional<Integer> roomCntByAccomIdAndDate(@Param("accomId") int accomId, @Param("targetDate") Date targetDate);
+
 }

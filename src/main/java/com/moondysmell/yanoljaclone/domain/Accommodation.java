@@ -1,24 +1,44 @@
 package com.moondysmell.yanoljaclone.domain;
 
-import lombok.*;
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.lang.Nullable;
 
 
+@Data
+@Builder
 @Entity
-@Getter
-@Setter
+@AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "reserv")
 @Table(name="accommodation")
 public class Accommodation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accommodation_id_seq")
     @SequenceGenerator(name = "accommodation_id_seq", sequenceName = "accommodation_id_seq", allocationSize = 1)
     @Column(name = "id")
-    private int id;
+    private Integer id = null;
 
     @Column(name = "accom_code")
     private String accomCode;
@@ -26,22 +46,14 @@ public class Accommodation {
     @Column(name = "accom_name")
     private String accomName;
 
-    //    @Column
-//    private int location_code;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_code", referencedColumnName = "code")
-//    @JsonIgnore
-    private LocationCode locationCode;
+    @Column(name = "location_code")
+    private int locationCode;
 
     @Column(name = "address")
     private String address;
 
-
-//    @Enumerated(EnumType.STRING)
-//    @Column(name="type", nullable = false)
-//    private RoomType room_type;
-@Column(name = "type")
-private String type;
+    @Column(name = "type")
+    private String type;
 
     @Column(name = "room_name")
     private String roomName;
@@ -57,7 +69,25 @@ private String type;
 
     //Accomodation 1 : N Reservation
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "accom", targetEntity = Reservation.class)
+    @JsonIgnore
     private List<Reservation> reserv = new ArrayList<>();
+
+    public Accommodation copy() {
+        Accommodation newAccom = Accommodation.builder()
+                                     .id(this.id)
+                                     .accomCode(this.accomCode)
+                                     .accomName(this.accomName)
+                                     .locationCode(this.locationCode)
+                                     .address(this.address)
+                                     .type(this.type)
+                                     .roomName(this.roomName)
+                                     .roomCnt(this.roomCnt)
+                                     .price(this.price)
+                                     .detail(this.detail)
+                                     .build();
+
+        return newAccom;
+    }
 
     public void removeReserv(){
         int restroom_cnt = this.roomCnt - 1;
@@ -75,17 +105,5 @@ private String type;
     public void updateDetail(String detail){
         this.detail = detail;
     }
-
-//    @Builder
-//    public Accommodation(String accom_code, String accom_name, int location_code, String address, RoomType room_type, String room_name, int room_cnt, int price, String detail){
-//        this.accom_code = accom_code;
-//        this.accom_name = accom_name;
-//        this.location_code = location_code;
-//        this.address = address;
-//        this.room_type = room_type;
-//        this.room_name = room_name;
-//        this.room_cnt = room_cnt;
-//        this.price = price;
-//    }
 
 }
