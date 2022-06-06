@@ -9,9 +9,8 @@ import lombok.Getter;
 public enum CommonCode {
     // SUCCESS
     SUCCESS(200, 200, "성공"),
-    // COMMON
-    UNKNOWN_ERROR(500, -1, "실패. 알 수 없는 오류"),
-
+    // FAIL
+    FAIL(500, -1, "실패. 알 수 없는 오류"),
 
     //-1000:Accom
     ACCOM_TYPE_NOT_EXIST(400,-1000, "존재하지 않는 Type입니다."),

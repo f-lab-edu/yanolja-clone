@@ -39,7 +39,7 @@ public class AccomController {
         if (b) {
             return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS));
         } else
-            throw new CustomException(CommonCode.UNKNOWN_ERROR);
+            throw new CustomException(CommonCode.FAIL);
     }
 
     //지역 코드로 숙소 검색
