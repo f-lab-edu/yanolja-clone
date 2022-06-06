@@ -21,7 +21,7 @@ public enum CommonCode {
     //-2000:Reservation
     AVAILABLE_ROOM_IS_NOT_EXIST(400, -2000,"예약가능한 방이 존재하지 않습니다."),
     THIS_RESERVAION_IS_ALREADY_CANCLED(400,-2001,"이미 취소된 내역입니다."),
-    RESERVATION_IS_NOT_EXIST(400,-2002,"예약내역이 존재하지 않습니다."),
+    RESERVATION_IS_NOT_EXIST(400,-2002,"예약된 내역이 없습니다."),
     RRSERV_ID_IS_NOT_EXIST(400,-2003,"해당 예약번호는 존재하지 않습니다."),
 
     //-3000: Customer

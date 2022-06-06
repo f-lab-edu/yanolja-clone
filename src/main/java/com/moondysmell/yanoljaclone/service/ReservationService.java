@@ -41,19 +41,17 @@ public class ReservationService {
     public List<ReservationResponseDto> getReservedResult(String name, int reserv_id, String phone_num){
 
         //회원T에 해당회원정보가 있는지 확인, 없으면 예외처리
-        Customer customer = userRepository.findByNameAndPhoneNum(name,phone_num).orElseThrow(
-                () -> {
+        Customer customer = userRepository.findByNameAndPhoneNum(name,phone_num).orElseThrow(() -> {
                     throw new CustomException(CommonCode.CUSTOMER_IS_NOT_EXIST);
-                }
-        );
+        });
 
-        //
-        reservRepositoty.findById(reserv_id).orElseThrow(() -> {
+        //예약번호 확인
+        Reservation reservation = reservRepositoty.findById(reserv_id).orElseThrow(() -> {
             throw new CustomException(CommonCode.RRSERV_ID_IS_NOT_EXIST);
         });
 
-        //해당 회원이 있으면 예약 내역 조회
-        List<ReservationResponseDto> reservList = reservRepositoty.findReservedDetail(customer.getName(), reserv_id, customer.getPhoneNum());
+
+        List<ReservationResponseDto> reservList = reservRepositoty.findReservedDetail(customer.getName(), reservation.getReserv_id(), customer.getPhoneNum());
 
         if(reservList.isEmpty()){
             throw new CustomException(CommonCode.RESERVATION_IS_NOT_EXIST);
@@ -108,7 +106,7 @@ public class ReservationService {
         if(reservation.getReserv_status() == ReservStatus.reserv_complete) {
             reservation.setReserv_status(ReservStatus.reserve_cancle);
         }else{
-            throw new CustomException(CommonCode.AVAILABLE_ROOM_IS_NOT_EXIST);
+            throw new CustomException(CommonCode.THIS_RESERVAION_IS_ALREADY_CANCLED);
         }
         reservRepositoty.save(reservation);
 
