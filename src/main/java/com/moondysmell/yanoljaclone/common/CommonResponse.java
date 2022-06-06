@@ -15,15 +15,9 @@ public class CommonResponse<T> {
         this.attribute = attribute;
     }
 
-//    public CommonResponse(SuccessCode successCode) {
-//        this.code = successCode.getCode();
-//        this.message = successCode.getMessage();
-//    }
-
     public CommonResponse(CommonCode commonCode) {
         this.code = commonCode.getCode();
         this.message = commonCode.getMessage();
     }
-
 
 }

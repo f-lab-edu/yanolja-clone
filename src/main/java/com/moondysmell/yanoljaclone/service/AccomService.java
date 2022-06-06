@@ -92,7 +92,7 @@ public class AccomService {
     public int countEmptyRoomsByAccomIdAndDate(int accomId, LocalDate from, LocalDate to) {
         Optional<Accommodation> targetAccom = accomRepository.findById(accomId);
         if (targetAccom.isEmpty())
-            throw new CustomException(CommonCode.ACCOM_ID_NOT_EXIST);
+            throw new RuntimeException("accomId 가 존재하지 않습니다. 다시 확인해주세요");
 
         int emptyRoomResult = 9999;
         int totalRoomCnt = targetAccom.get().getRoomCnt();

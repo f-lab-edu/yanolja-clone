@@ -3,7 +3,6 @@ package com.moondysmell.yanoljaclone.common;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @JsonFormat(shape = Shape.OBJECT)
@@ -25,6 +24,15 @@ public enum CommonCode {
 
     //-3000: Customer
 
+    //-2000:Reservation
+    AVAILABLE_ROOM_IS_NOT_EXIST(400, -2000,"예약가능한 방이 존재하지 않습니다."),
+    THIS_RESERVAION_IS_ALREADY_CANCLED(400,-2001,"이미 취소된 내역입니다."),
+    RESERVATION_IS_NOT_EXIST(400,-2002,"예약된 내역이 없습니다."),
+    RRSERV_ID_IS_NOT_EXIST(400,-2003,"해당 예약번호는 존재하지 않습니다."),
+
+    //-3000: Customer
+    CUSTOMER_IS_NOT_EXIST(400,-3000,"해당 회원은 존재하지 않습니다."),
+
     //-4000: LocationCode
     LOCATION_CODE_NOT_EXIST(400, -4000, "Location Code가 존재하지 않습니다.");
 
@@ -38,5 +46,4 @@ public enum CommonCode {
         this.message = message;
         this.code = code;
     }
-
 }

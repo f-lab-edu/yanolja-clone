@@ -10,10 +10,11 @@ import org.springframework.beans.BeanUtils;
 public class UserResponseDto {
     private int user_id;
     private String name;
-    private int phone_num;
-
+    private String phone_num;
 
     public UserResponseDto(Customer customer) {
         BeanUtils.copyProperties(customer, this);
     }
+
+
 }
