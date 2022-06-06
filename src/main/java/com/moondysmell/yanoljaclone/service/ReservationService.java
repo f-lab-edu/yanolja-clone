@@ -100,7 +100,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancleReservation(int reserv_id){
+    public Reservation cancleReservation(int reserv_id){
         //예약 취소 시 상태값만 변경 (reserv_complete -> reserve_cancle)
         Reservation reservation = reservRepositoty.findById(reserv_id).get();
         if(reservation.getReserv_status() == ReservStatus.reserv_complete) {
@@ -108,8 +108,8 @@ public class ReservationService {
         }else{
             throw new CustomException(CommonCode.THIS_RESERVAION_IS_ALREADY_CANCLED);
         }
-        reservRepositoty.save(reservation);
-
+        reservation = reservRepositoty.save(reservation);
+        return reservation;
     }
 
     public int getReservByAccomIdAndDate(int accomId, Date targetDate) {

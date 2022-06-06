@@ -1,6 +1,7 @@
 package com.moondysmell.yanoljaclone.controller;
 
 import com.moondysmell.yanoljaclone.domain.PaymentType;
+import com.moondysmell.yanoljaclone.domain.Reservation;
 import com.moondysmell.yanoljaclone.domain.TransType;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationMakeDto;
 import com.moondysmell.yanoljaclone.domain.dto.ReservationRequestDto;
@@ -56,10 +57,10 @@ public class ReservationController {
 
     }
 
-    @PutMapping("/cancle/{reserv_id}")
-    public ResponseEntity<Void> cancleReservation(@PathVariable int reserv_id){
-            reservService.cancleReservation(reserv_id);
-        return new ResponseEntity( HttpStatus.OK);
+    @PostMapping("/cancle")
+    public ResponseEntity<Reservation> cancleReservation(@RequestParam int reserv_id){
+           Reservation reservedResult = reservService.cancleReservation(reserv_id);
+        return new ResponseEntity<>(reservedResult, HttpStatus.OK);
     }
 
 }
