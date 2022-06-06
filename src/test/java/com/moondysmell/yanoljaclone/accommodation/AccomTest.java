@@ -37,10 +37,7 @@ public class AccomTest {
         List<Accommodation> accomList = accomService.findAllByLocationCode(10);
 
         Map<String, Set<Accommodation>> groupedAccomList = accomList.stream()
-                                                               .collect(
-                                                                   Collectors.groupingBy(
-                                                                       Accommodation::getAccomCode,
-                                                                       toSet()));
+                                                               .collect(Collectors.groupingBy(Accommodation::getAccomCode, toSet()));
         log.info("groupedAccomList keySet: " + groupedAccomList.keySet().toString());
     }
 
@@ -49,10 +46,7 @@ public class AccomTest {
         List<Accommodation> accomList = accomService.findAllByTypeAndLocationCode("Hotel",10);
 
         Map<String, Set<Accommodation>> groupedAccomList = accomList.stream()
-                                                               .collect(
-                                                                   Collectors.groupingBy(
-                                                                       Accommodation::getAccomCode,
-                                                                       toSet()));
+                                                               .collect(Collectors.groupingBy(Accommodation::getAccomCode, toSet()));
         log.info("groupedAccomList keySet: " + groupedAccomList.keySet().toString());
     }
 
