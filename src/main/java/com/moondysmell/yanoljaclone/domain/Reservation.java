@@ -1,6 +1,8 @@
 package com.moondysmell.yanoljaclone.domain;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -13,10 +15,10 @@ public class Reservation  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reserv_id;
+    private Integer reserv_id;
 
     //Resionvation : Member = N : 1
-    @ManyToOne(targetEntity= Customer.class)
+    @ManyToOne(targetEntity= Customer.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Customer customer;
 
@@ -48,15 +50,29 @@ public class Reservation  {
     @Enumerated(EnumType.STRING)
     private ReservStatus reserv_status;
 
-    @Builder
-    private Reservation(final int reserv_id, Customer user_id, Accommodation id, Date checkin, Date checkout, PaymentType payment_type, TransType trans_type, ReservStatus reserv_status) {
-        this.reserv_id = reserv_id;
-        this.customer = user_id;
-        this.accom = id;
-        this.checkin = checkout;
+    @Builder(builderMethodName = "createReservation")
+    private Reservation(Customer customer, Accommodation accom, Date checkin, Date checkout,int room_cnt, PaymentType payment_type, TransType trans_type, ReservStatus reserv_status) {
+        this.customer = customer;
+        this.accom = accom;
+        this.checkin = checkin;
+        this.checkout = checkout;
+        this.room_cnt = room_cnt;
         this.payment_type = payment_type;
         this.trans_type = trans_type;
         this.reserv_status = reserv_status;
     }
+
+    //연관관계 메소드 정의
+    public void addCustomer(Customer customer){
+        this.customer = customer;
+        customer.getReserv().add(this);
+
+    }
+
+    public void setAccom(Accommodation accom){
+        this.accom = accom;
+        accom.getReserv().add(this);
+    }
+
 
 }

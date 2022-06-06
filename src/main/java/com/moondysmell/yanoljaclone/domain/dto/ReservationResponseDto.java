@@ -36,7 +36,7 @@ public class ReservationResponseDto {
         this.room_cnt = reservation.getRoom_cnt();
         this.price = reservation.getAccom().getPrice();
         this.name = reservation.getCustomer().getName();
-        this.phone_num = reservation.getCustomer().getPhone_num();
+        this.phone_num = reservation.getCustomer().getPhoneNum();
         this.payment_type = reservation.getPayment_type();
         this.detail = reservation.getAccom().getDetail();
     }
