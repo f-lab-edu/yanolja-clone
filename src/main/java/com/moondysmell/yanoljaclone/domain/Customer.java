@@ -16,20 +16,21 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
+    //@SequenceGenerator(name = "accommodation_id_seq", sequenceName = "customer_user_id_seq")
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String phone_num;
+    @Column(nullable = false, name="phone_num")
+    private String phoneNum;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Reservation> reserv = new ArrayList<>();
 
     @Builder(builderMethodName = "createUser")
-     public Customer(String name, String phone_num) {
+     public Customer(String name, String phoneNum) {
         this.name = name;
-        this.phone_num = phone_num;
+        this.phoneNum = phoneNum;
     }
 
 

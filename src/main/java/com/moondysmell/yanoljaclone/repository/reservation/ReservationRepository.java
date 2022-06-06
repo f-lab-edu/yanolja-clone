@@ -15,11 +15,11 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Integer>{
 
     //jpaquery, querydsl, tuple, native query
-     @Query(value = "select new com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto( r.reserv_id, a.accomName, r.checkin, r.checkout , r.trans_type, r.room_cnt, a.price, c.name, c.phone_num, r.payment_type, a.detail ) " +
+     @Query(value = "select new com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto( r.reserv_id, a.accomName, r.checkin, r.checkout , r.trans_type, r.room_cnt, a.price, c.name, c.phoneNum, r.payment_type, a.detail ) " +
                     "from Reservation r " +
                     "join Accommodation a on r.accom.id = a.id " +
                     "join Customer c on c.user_id = r.customer.user_id " +
-                    "where c.name = :name and r.reserv_id = :reserv_id and c.phone_num = :phone_num ")
+                    "where c.name = :name and r.reserv_id = :reserv_id and c.phoneNum = :phone_num ")
     //ReservationResponseDto findReservedDetail(@Param("name")String name, @Param("reserv_id")int reserv_id, @Param("phone_num")String phone_num);
     List<ReservationResponseDto> findReservedDetail(@Param("name")String name, @Param("reserv_id")int reserv_id, @Param("phone_num")String phone_num);
 

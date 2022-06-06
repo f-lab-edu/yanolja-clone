@@ -9,7 +9,7 @@ public enum ErrorCode {
     INVALID_CODE(400, "C001", "Invalid Code"),
 
     //1000:Accom
-    NOT_ENOUGH_ROOM(2000,"C002","No Room Anymore");
+    NOT_ENOUGH_ROOM(2000,"A002","No Room Anymore");
 
     //2000:Reservation
 

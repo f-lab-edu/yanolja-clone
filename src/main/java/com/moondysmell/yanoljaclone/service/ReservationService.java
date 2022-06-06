@@ -9,15 +9,10 @@ import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepository
 //import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepositoryCustom;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly=true)
@@ -65,8 +60,12 @@ public class ReservationService {
     @Transactional
     public ReservationResponseDto reserv(ReservationMakeDto reservationMakeDto) {
         Reservation newReserv = reservationMakeDto.toReservationEntity();
+        int accomId = reservationMakeDto.getAccomId();
+        String userName = reservationMakeDto.getUserName();
+        String phoneNum = reservationMakeDto.getPhoneNum();
 
-        Accommodation accom = accomRepository.findById(reservationMakeDto.getAccomId()).orElseThrow(
+
+        Accommodation accom = accomRepository.findById(accomId).orElseThrow(
                 () -> {
                     throw new IllegalArgumentException("해당 숙박업소를 조회할 수 없습니다.");
                 }
@@ -74,10 +73,14 @@ public class ReservationService {
 
         //예약내역 입력과 동시에 customerTable에 customer정보 insert
         //입력한 customer객체의 정보를 예약 등록하는 내역에 설정
-        Customer customer = Customer.createUser()
+        //customer값이 있으면 그 값받아서 Reservation에 사용, 없으면 새로 생성
+        Customer customer = userRepository.findByNameAndPhoneNum(userName,phoneNum).orElse(
+                Customer.createUser()
                 .name(reservationMakeDto.getUserName())
-                .phone_num(reservationMakeDto.getPhoneNum())
-                .build();
+                .phoneNum(reservationMakeDto.getPhoneNum())
+                .build());
+
+
         newReserv.addCustomer(customer);
         newReserv.setAccom(accom);
 
