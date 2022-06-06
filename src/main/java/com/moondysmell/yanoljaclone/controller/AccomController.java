@@ -33,14 +33,6 @@ public class AccomController {
     private final AccomService accomService;
     private final LocationCodeService locationCodeService;
 
-    //CustomException 쓰는 방법
-    @GetMapping("/errorTest")
-    public ResponseEntity<CommonResponse<String>> errorTest(@RequestParam("b") boolean b) {
-        if (b) {
-            return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS));
-        } else
-            throw new CustomException(CommonCode.FAIL);
-    }
 
     //지역 코드로 숙소 검색
     @GetMapping("/accom/getByLocation")
@@ -59,12 +51,12 @@ public class AccomController {
         Map<String, Set<Accommodation>> result = accomList.stream()
                                                      .collect(Collectors.groupingBy(Accommodation::getAccomCode, toSet()));
 
-        return ResponseEntity.ok(new CommonResponse<>(CommonCode.SUCCESS, result));
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, result));
     }
 
     // 예약가능한 방 검색(숙소 코드와 날짜를 기준으로 검색)
     @GetMapping("/room/getByDate")
-    public List<EmptyRoomDto> getRoomByDate(@RequestParam("from") String from, @RequestParam("to") String to, @RequestParam("accomCode") String accomCode) {
+    public ResponseEntity<CommonResponse> getRoomByDate(@RequestParam("from") String from, @RequestParam("to") String to, @RequestParam("accomCode") String accomCode) {
         LocalDate fromDate = LocalDate.parse(from, DateTimeFormatter.ISO_DATE);
         LocalDate toDate = LocalDate.parse(to, DateTimeFormatter.ISO_DATE);
 
@@ -84,30 +76,42 @@ public class AccomController {
             throw new CustomException(CommonCode.CHECKIN_CHECKOUT_OUT_OF_RANGE_ERROR);
 
         //대략적인 예약수만 확인 (from 날짜 하루만 예약수 확인)
-        return accomService.findAllRoomByCodeAndDate(accomCode, fromDate);
+        List<EmptyRoomDto> result = accomService.findAllRoomByCodeAndDate(accomCode, fromDate);
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, Map.of("result", result)));
     }
 
 
     // 지역코드 리스트 받기 (register form을 위해)
     @GetMapping("/getLocationCode")
-    public List<LocationCode> getAllLocationCode() {
-        return locationCodeService.findAllLocationCode();
+    public ResponseEntity<CommonResponse> getAllLocationCode() {
+        List<LocationCode> result = locationCodeService.findAllLocationCode();
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, Map.of("result", result)));
     }
 
     //숙소 추가
     //필수: accomName, locationCode, address, type, roomName, roomCnt, price
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @PostMapping("/accom/add")
-    public Accommodation addAccom(@RequestBody @Valid AccomAddDto accom) {
-        return accomService.createAccom(accom);
+    public ResponseEntity<CommonResponse> addAccom(@RequestBody @Valid AccomAddDto accom) {
+        Accommodation createdAccom = accomService.createAccom(accom);
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, Map.of("createdAccom", createdAccom)));
     }
 
     //방 추가
     //필수: accomCode, roomName, roomCnt, price
     @PostMapping("/room/add")
-    public Accommodation addRoom(@RequestBody @Valid RoomAddDto roomAddDto) {
-        return accomService.createRoom(roomAddDto);
+    public ResponseEntity<CommonResponse> addRoom(@RequestBody @Valid RoomAddDto roomAddDto) {
+        Accommodation createdRoom = accomService.createRoom(roomAddDto);
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, Map.of("createdRoom", createdRoom)));
     }
 
+//    //CustomException 쓰는 방법 테스트
+//    @GetMapping("/errorTest")
+//    public ResponseEntity<CommonResponse<String>> errorTest(@RequestParam("b") boolean b) {
+//        if (b) {
+//            return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS));
+//        } else
+//            throw new CustomException(CommonCode.FAIL);
+//    }
 
 }
