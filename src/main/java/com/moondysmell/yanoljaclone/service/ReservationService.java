@@ -30,12 +30,28 @@ public class ReservationService {
     @Autowired
     private final ReservationRepository reservRepositoty;
 
+//    @Transactional
+//    public List<ReservationResponseDto> getReservedResult(String name, int reserv_id, String phone_num) {
+//
+//        List<ReservationResponseDto> reservList = reservRepositoty.findReservedDetail(name, reserv_id, phone_num);
+//
+//        if (reservList.isEmpty()) {
+//            throw new IllegalArgumentException("예약 내역이 존재하지 않습니다.");
+//        }
+//
+//        return reservList;
+//        //return reserv.stream().map(ReservationResponseDto::new).collect(Collectors.toList());
+//        //return reservList.stream()
+//        //       .map(reserv -> new ReservationResponseDto(reserv))
+//        //       .collect(Collectors.toList());
+//    }
+
     @Transactional
     public List<ReservationResponseDto> getReservedResult(String name, int reserv_id, String phone_num) {
 
         List<ReservationResponseDto> reservList = reservRepositoty.findReservedDetail(name, reserv_id, phone_num);
 
-        if (reservList.isEmpty()) {
+        if (reservList == null) {
             throw new IllegalArgumentException("예약 내역이 존재하지 않습니다.");
         }
 
@@ -50,8 +66,6 @@ public class ReservationService {
     public ReservationResponseDto reserv(ReservationMakeDto reservationMakeDto) {
         Reservation newReserv = reservationMakeDto.toReservationEntity();
 
-        //한 룸에 대한 총 방 개수
-        //Integer totalRoomCnt = 0;
         Accommodation accom = accomRepository.findById(reservationMakeDto.getAccomId()).orElseThrow(
                 () -> {
                     throw new IllegalArgumentException("해당 숙박업소를 조회할 수 없습니다.");
@@ -68,17 +82,6 @@ public class ReservationService {
         newReserv.setAccom(accom);
 
         newReserv = reservRepositoty.save(newReserv);
-
-        //룸 예약하면 총 룸 개수에서 감소
-        //accom.removeRoomCnt();
-//        Reservation reserv = Reservation.createReservation()
-//                .customer(customer)
-//                .accom(accom)
-//                .checkin()
-//                .checkout()
-//                .payment_type(paymentType)
-//                .reserv_status(ReservStatus.reserv_complete)
-//                .trans_type(transType)
 
 
         return new ReservationResponseDto(newReserv);

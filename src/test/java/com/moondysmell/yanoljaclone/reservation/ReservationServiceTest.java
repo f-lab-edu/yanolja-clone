@@ -64,7 +64,8 @@ class ReservationServiceTest {
 	public void read(){
 
 
-		List<ReservationResponseDto> reserv = reservService.getReservedResult("smell",1,"01022223333");
+		List<ReservationResponseDto> reserv = reservService.getReservedResult("kkk",1,"01022223333");
+		//ReservationResponseDto reserv = reservService.getReservedResult("smell",1,"01022223333");
 	}
 
 

@@ -12,14 +12,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Any>{
+public interface ReservationRepository extends JpaRepository<Reservation, Integer>{
 
     //jpaquery, querydsl, tuple, native query
-     @Query(value = "select new com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto( r.reserv_id, a.accomName, r.checkin, r.checkout , r.trans_type, r.room_cnt, a.price, u.name, u.phone_num, r.payment_type, a.detail ) " +
-                    " from Reservation r " +
+     @Query(value = "select new com.moondysmell.yanoljaclone.domain.dto.ReservationResponseDto( r.reserv_id, a.accomName, r.checkin, r.checkout , r.trans_type, r.room_cnt, a.price, c.name, c.phone_num, r.payment_type, a.detail ) " +
+                    "from Reservation r " +
                     "join Accommodation a on r.accom.id = a.id " +
-                    "join Customer u on u.user_id = r.customer.user_id " +
-                    "where u.name = :name and r.reserv_id = :reserv_id and u.phone_num = :phone_num ")
+                    "join Customer c on c.user_id = r.customer.user_id " +
+                    "where c.name = :name and r.reserv_id = :reserv_id and c.phone_num = :phone_num ")
+    //ReservationResponseDto findReservedDetail(@Param("name")String name, @Param("reserv_id")int reserv_id, @Param("phone_num")String phone_num);
     List<ReservationResponseDto> findReservedDetail(@Param("name")String name, @Param("reserv_id")int reserv_id, @Param("phone_num")String phone_num);
 
 }

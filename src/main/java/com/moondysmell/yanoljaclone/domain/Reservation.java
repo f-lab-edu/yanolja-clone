@@ -77,29 +77,4 @@ public class Reservation  {
     }
 
 
-
-
-    ///비즈니스 로직 -> 데이터를 가지고 있는 곳에서 비지니스 로직을 만드는 것이 좋음
-    //객체 지향적 성격 항샹과 응집력 향상
-
-    //예약 날짜 및 예약 시간 update
-    public void updateDateAndTime(Date reservedCheckin,Date reservedCheckout){
-        this.checkin = reservedCheckin;
-        this.checkout =reservedCheckout;
-    }
-
-    //예약) 방 예약 시 Accom 총 방개수 감소
-
-    //
-//    public void removeRoomCnt(){
-//        int restRoomCnt = this.roomCnt - 1;
-//        if(restRoomCnt < 0){
-//            throw new RuntimeException("out of stock");
-//        }
-//        this.roomCnt = restRoomCnt;
-//    }
-
-
-
-
 }
