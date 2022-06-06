@@ -14,7 +14,9 @@ public enum ErrorCode {
 
 
     //-1000:Accom
-
+    ACCOM_TYPE_NOT_EXIST(400,-1000, "존재하지 않는 Type입니다."),
+    ACCOMCODE_NOT_EXIST(400, -1001, "accomCode에 해당하는 숙소가 없습니다."),
+    ACCOM_ID_NOT_EXIST(400, -1002, "accomId가 존재하지 않습니다. "),
     //-2000:Reservation
 
     //-3000: Customer

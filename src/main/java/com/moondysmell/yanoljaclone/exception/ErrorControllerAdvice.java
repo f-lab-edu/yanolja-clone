@@ -16,6 +16,7 @@ public class ErrorControllerAdvice {
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         ErrorResponse response = ErrorResponse.of(e.getErrorCode());
         log.error(">>> " + response);
+        log.error(e.getMessage());
         return new ResponseEntity<>(response, e.getHttpStatus());
     }
 }
