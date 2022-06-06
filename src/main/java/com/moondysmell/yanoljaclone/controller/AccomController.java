@@ -3,15 +3,14 @@ package com.moondysmell.yanoljaclone.controller;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toSet;
 
-import com.moondysmell.yanoljaclone.common.SuccessCode;
 import com.moondysmell.yanoljaclone.common.CommonResponse;
 import com.moondysmell.yanoljaclone.domain.Accommodation;
 import com.moondysmell.yanoljaclone.domain.LocationCode;
 import com.moondysmell.yanoljaclone.domain.dto.AccomAddDto;
 import com.moondysmell.yanoljaclone.domain.dto.EmptyRoomDto;
 import com.moondysmell.yanoljaclone.domain.dto.RoomAddDto;
-import com.moondysmell.yanoljaclone.exception.CustomException;
-import com.moondysmell.yanoljaclone.exception.CommonCode;
+import com.moondysmell.yanoljaclone.common.CustomException;
+import com.moondysmell.yanoljaclone.common.CommonCode;
 import com.moondysmell.yanoljaclone.service.AccomService;
 import com.moondysmell.yanoljaclone.service.LocationCodeService;
 import java.time.LocalDate;

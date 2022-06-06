@@ -1,4 +1,4 @@
-package com.moondysmell.yanoljaclone.exception;
+package com.moondysmell.yanoljaclone.common;
 
 import org.springframework.http.HttpStatus;
 

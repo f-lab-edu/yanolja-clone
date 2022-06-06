@@ -1,6 +1,5 @@
 package com.moondysmell.yanoljaclone.common;
 
-import com.moondysmell.yanoljaclone.exception.CommonCode;
 import java.util.Map;
 import lombok.Data;
 
