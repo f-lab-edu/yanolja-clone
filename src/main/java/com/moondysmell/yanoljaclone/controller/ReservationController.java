@@ -1,5 +1,8 @@
 package com.moondysmell.yanoljaclone.controller;
 
+import com.moondysmell.yanoljaclone.common.CommonCode;
+import com.moondysmell.yanoljaclone.common.CommonResponse;
+import com.moondysmell.yanoljaclone.common.CustomException;
 import com.moondysmell.yanoljaclone.domain.PaymentType;
 import com.moondysmell.yanoljaclone.domain.Reservation;
 import com.moondysmell.yanoljaclone.domain.TransType;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,7 +30,7 @@ public class ReservationController {
 
 
     @PostMapping("/make")
-    public ResponseEntity<ReservationResponseDto> makeReservarion(@RequestBody ReservationMakeDto reservationMakeDto) {
+    public ResponseEntity<CommonResponse> makeReservarion(@RequestBody ReservationMakeDto reservationMakeDto) {
 
            String userName = reservationMakeDto.getUserName();
            String phoneNum = reservationMakeDto.getPhoneNum();
@@ -35,8 +39,7 @@ public class ReservationController {
 
            ReservationResponseDto reservedResult = reservService.reserv(reservationMakeDto);
 
-           if(reservedResult != null) return ResponseEntity.ok(reservedResult);
-           else return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, Map.of("reservedResult", reservedResult)));
 
 
     }
@@ -44,7 +47,7 @@ public class ReservationController {
 
     //한 유저에 대한 예약 내역
     @GetMapping("/detail")
-    public ResponseEntity<List<ReservationResponseDto>> findByDetail(@Valid @RequestBody ReservationRequestDto reservedRequestDto){
+    public ResponseEntity<CommonResponse<List<ReservationResponseDto>>> findByDetail(@Valid @RequestBody ReservationRequestDto reservedRequestDto){
         //객체로 받아오기 위해 RequestBody선언
         String user_name = reservedRequestDto.getName();
         int reserv_id = reservedRequestDto.getReserv_id();
@@ -52,15 +55,14 @@ public class ReservationController {
 
         List<ReservationResponseDto> reservedResult = reservService.getReservedResult(user_name, reserv_id, phone_num);
 
-        if(reservedResult.isEmpty()) return new ResponseEntity(HttpStatus.NO_CONTENT);
-        else return  new ResponseEntity<>(reservedResult, HttpStatus.OK);
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, Map.of("reservedResult", reservedResult)));
 
     }
 
     @PostMapping("/cancle")
-    public ResponseEntity<Reservation> cancleReservation(@RequestParam int reserv_id){
+    public ResponseEntity<CommonResponse> cancleReservation(@RequestParam int reserv_id){
            Reservation reservedResult = reservService.cancleReservation(reserv_id);
-        return new ResponseEntity<>(reservedResult, HttpStatus.OK);
+        return ResponseEntity.ok(new CommonResponse(CommonCode.SUCCESS, Map.of("reservedResult", reservedResult)));
     }
 
 }
