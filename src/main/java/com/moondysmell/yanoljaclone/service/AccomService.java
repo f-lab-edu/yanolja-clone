@@ -86,34 +86,6 @@ public class AccomService {
         return result;
     }
 
-    //reservationService 에서 예약 가능한지 확인할 때 사용하는 함수
-    public int countEmptyRoomsByAccomIdAndDate(int accomId, LocalDate from, LocalDate to) {
-        Optional<Accommodation> targetAccom = accomRepository.findById(accomId);
-        if (targetAccom.isEmpty())
-            throw new RuntimeException("accomId 가 존재하지 않습니다. 다시 확인해주세요");
-
-        int emptyRoomResult = 9999;
-        int totalRoomCnt = targetAccom.get().getRoomCnt();
-
-        // from 부터 to까지 모든 날짜를 다 List로 만들어 놓고 for문 돌림
-        List<LocalDate> listOfDates = from.datesUntil(to)
-                                          .collect(Collectors.toList());
-        log.info("from과 to의 날짜 차이: " + listOfDates.size());
-
-        for (LocalDate ld : listOfDates) {
-            Date targetDate = java.sql.Date.valueOf(ld);
-            int reservedCnt = reservationService.getReservByAccomIdAndDate(accomId, targetDate);
-            int emptyCnt = totalRoomCnt - reservedCnt;
-            emptyRoomResult = (emptyRoomResult > emptyCnt) ? emptyCnt : emptyRoomResult;
-        }
-
-        return emptyRoomResult;
-    }
-
-
-
-
-
 
 
     public Accommodation createAccom(AccomAddDto accom) {

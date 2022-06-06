@@ -29,12 +29,10 @@ public class Reservation  {
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "YYYY-MM-DD")
     private Date checkin;
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "YYYY-MM-DD")
     private Date checkout;
 
     @Column(nullable = false)

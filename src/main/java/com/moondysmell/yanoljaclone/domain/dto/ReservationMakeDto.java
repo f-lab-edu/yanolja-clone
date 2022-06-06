@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +23,12 @@ public class ReservationMakeDto {
 
     private String phoneNum;
 
+    @NotNull(message = "CHECKIN_IS_MANDATORY")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date checkin;
 
+    @NotNull(message = "CHECKOUT_IS_MANDATORY")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date checkout;
 
     private TransType transType;
