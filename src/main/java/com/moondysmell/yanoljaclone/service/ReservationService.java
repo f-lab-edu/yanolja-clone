@@ -9,6 +9,7 @@ import com.moondysmell.yanoljaclone.repository.AccommodationRepository;
 import com.moondysmell.yanoljaclone.repository.UserRepository;
 import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepository;
 //import com.moondysmell.yanoljaclone.repository.reservation.ReservationRepositoryCustom;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -68,6 +69,7 @@ public class ReservationService {
         String userName = reservationMakeDto.getUserName();
         String phoneNum = reservationMakeDto.getPhoneNum();
         int roomCnt = reservationMakeDto.getRoomCnt();
+
         LocalDate checkin = convertDateToLocalDate(reservationMakeDto.getCheckin());
         LocalDate checkout = convertDateToLocalDate(reservationMakeDto.getCheckout());
 
@@ -79,8 +81,9 @@ public class ReservationService {
         );
 
         //예약가능한 날짜와 방
-        int emptyRoomCnt = countEmptyRoomsByAccomIdAndDate(accomId, checkin, checkout);
+        int emptyRoomCnt = countEmptyRoomsByAccomIdAndDate(accomId, checkin, checkout, true);
         if (emptyRoomCnt < roomCnt) throw new CustomException(CommonCode.AVAILABLE_ROOM_IS_NOT_EXIST);
+        log.info("예약 후 남은 방 개수 :  " + emptyRoomCnt);
 
         //예약내역 입력과 동시에 customerTable에 customer정보 insert
         //입력한 customer객체의 정보를 예약 등록하는 내역에 설정
@@ -103,6 +106,14 @@ public class ReservationService {
     public Reservation cancleReservation(int reserv_id){
         //예약 취소 시 상태값만 변경 (reserv_complete -> reserve_cancle)
         Reservation reservation = reservRepositoty.findById(reserv_id).get();
+        int accomId = reservation.getAccom().getId();
+
+        LocalDate checkin = convertDateToLocalDate(reservation.getCheckin());
+        LocalDate checkout = convertDateToLocalDate(reservation.getCheckout());
+
+        int emptyRoomCnt = countEmptyRoomsByAccomIdAndDate(accomId, checkin, checkout , false);
+        log.info("cancle 후 남은 방 개수 :  " + emptyRoomCnt);
+
         if(reservation.getReserv_status() == ReservStatus.reserv_complete) {
             reservation.setReserv_status(ReservStatus.reserve_cancle);
         }else{
@@ -120,14 +131,19 @@ public class ReservationService {
     }
 
     public LocalDate convertDateToLocalDate(Date dt) {
-        return dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        //return dt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        //DateType으로 인하여 변환방식 변경
+        return Instant.ofEpochMilli(dt.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
     //reservationService 에서 예약 가능한지 확인할 때 사용하는 함수
-    public int countEmptyRoomsByAccomIdAndDate(int accomId, LocalDate from, LocalDate to) {
+    public int countEmptyRoomsByAccomIdAndDate(int accomId, LocalDate from, LocalDate to, boolean flag) {
         Optional<Accommodation> targetAccom = accomRepository.findById(accomId);
         if (targetAccom.isEmpty())
-            throw new RuntimeException("accomId 가 존재하지 않습니다. 다시 확인해주세요");
+            throw new CustomException(CommonCode.ACCOM_ID_NOT_EXIST);
+
 
         int emptyRoomResult = 9999;
         int totalRoomCnt = targetAccom.get().getRoomCnt();
@@ -137,10 +153,11 @@ public class ReservationService {
                 .collect(Collectors.toList());
         log.info("from과 to의 날짜 차이: " + listOfDates.size());
 
+        //true : 방 예약, false : 방 취소
         for (LocalDate ld : listOfDates) {
             Date targetDate = java.sql.Date.valueOf(ld);
             int reservedCnt = getReservByAccomIdAndDate(accomId, targetDate);
-            int emptyCnt = totalRoomCnt - reservedCnt;
+            int emptyCnt = ( flag == true ) ? (totalRoomCnt - reservedCnt) : (totalRoomCnt + reservedCnt);
             emptyRoomResult = (emptyRoomResult > emptyCnt) ? emptyCnt : emptyRoomResult;
         }
 

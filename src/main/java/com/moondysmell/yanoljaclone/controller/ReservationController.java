@@ -30,7 +30,7 @@ public class ReservationController {
 
 
     @PostMapping("/make")
-    public ResponseEntity<CommonResponse> makeReservarion(@RequestBody ReservationMakeDto reservationMakeDto) {
+    public ResponseEntity<CommonResponse> makeReservarion(@Valid @RequestBody ReservationMakeDto reservationMakeDto) {
 
            String userName = reservationMakeDto.getUserName();
            String phoneNum = reservationMakeDto.getPhoneNum();
