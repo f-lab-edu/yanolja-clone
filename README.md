@@ -1,9 +1,44 @@
 # yanolja-clone
+
+## 사용 기술 및 환경
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
+<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=white">
+- Spring Boot
+- JPA
+- PostgreSql
+- Java11
+
 ## 프로젝트 목표
 
 - 야놀자 서비스 중 숙소 검색 및 예약 페이지의 API를 구현해보는 것
 - JPA를 통해 DB와 연결하고, 서비스에 맞는 테이블 릴레이션 설정
 - Front-end 개발자가 API를 사용하기 쉽게 일정한 형식의 Response(Error 메세지 포함) 리턴
+
+
+## 유저 관점에서의 시나리오
+
+![user-scenario](https://user-images.githubusercontent.com/56625356/172689392-02488524-10ca-42f9-9565-33a2fcd5ff47.png)
+
+
+- Back-end API만 구현
+
+
+## DB 설계(ERD)
+
+![erd](https://user-images.githubusercontent.com/56625356/172689436-e04f4907-2955-4a84-a0da-960c641e4f9e.png)
+
+
+## 브랜치 관리 전략
+
+- Issue 생성 → Issue 번호를 딴 branch 생성
+- 목적에 따라 feat, refact, debug 폴더로 branch 관리
+ ```java
+keyword
+- feat : 새로운 기능이 추가 됨
+- refact : 기능 혹은 성능 개선
+- debug : 버그 수정
+```
+- 개발 완료 후 main branch 내용을 current branch로 Merge한 후 Pull Request
 
 ## ISSUE 및 해결방안
 
@@ -27,36 +62,6 @@
 - 일일이 커스텀 예외 클래스를 만들면 지나치케 클래스가 많아지는 문제
     - CustomException과 CommonCode로 에러 메세지 공통 관리
 
-## 유저 관점에서의 시나리오
-
-![user-scenario](https://user-images.githubusercontent.com/56625356/172689392-02488524-10ca-42f9-9565-33a2fcd5ff47.png)
-
-
-- Back-end API만 구현
-
-## 사용 기술 및 환경
-
-- Spring Boot
-- JPA
-- PostgreSql
-- Java11
-
-## DB 설계(ERD)
-
-![erd](https://user-images.githubusercontent.com/56625356/172689436-e04f4907-2955-4a84-a0da-960c641e4f9e.png)
-
-
-## 브랜치 관리 전략
-
-- Issue 생성 → Issue 번호를 딴 branch 생성
-- 목적에 따라 feat, refact, debug 폴더로 branch 관리
- ```java
-keyword
-- feat : 새로운 기능이 추가 됨
-- refact : 기능 혹은 성능 개선
-- debug : 버그 수정
-```
-- 개발 완료 후 main branch 내용을 current branch로 Merge한 후 Pull Request
 
 ## API Document
 
