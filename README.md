@@ -1,12 +1,8 @@
 # yanolja-clone
 
 ## 사용 기술 및 환경
-<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
-<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=white">
-- Spring Boot
-- JPA
-- PostgreSql
-- Java11
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=plastic&logo=appveyor&logoColor=white"/> <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=plastic&logo=appveyor&logoColor=white"> <img src="https://img.shields.io/badge/Spring Boot-4169E1?style=plastic&logo=appveyor&logoColor=white"/> <img src="https://img.shields.io/badge/JAVA11-F7901E?style=plastic&logo=appveyor&logoColor=white"/> <img src="https://img.shields.io/badge/JPA-6236FF?style=plastic&logo=appveyor&logoColor=white"/>
+
 
 ## 프로젝트 목표
 
