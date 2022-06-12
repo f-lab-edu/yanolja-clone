@@ -13,7 +13,7 @@
 
 ## 유저 관점에서의 시나리오
 
-![user-scenario](https://user-images.githubusercontent.com/56625356/172689392-02488524-10ca-42f9-9565-33a2fcd5ff47.png)
+![yanolja-clone-scenario](https://user-images.githubusercontent.com/56625356/173225097-422b97a4-cdab-4539-9cdb-f3edc65a2434.png)
 
 
 - Back-end API만 구현
