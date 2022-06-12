@@ -22,20 +22,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> createUSer(@Validated @RequestBody final UserCreateRequestDto userCreateRequestDto, BindingResult bindingResult){
-       /* if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
-            // 200 response with 404 status code
-            //return ResponseEntity.ok(new ErrorResponse("404", "Validation failure", errors));
-            // 404 request
-            return ResponseEntity.badRequest().body(new ErrorResponse("404", "Validation failure", errors));
-        }*/
-
-        return new ResponseEntity(
-                new UserResponseDto(userService.createUser(userCreateRequestDto.toEntity())),HttpStatus.CREATED
-            );
-        }
+//    @PostMapping
+//    public ResponseEntity<?> createUSer(@Validated @RequestBody final UserCreateRequestDto userCreateRequestDto, BindingResult bindingResult){
+//       /* if (bindingResult.hasErrors()) {
+//            List<String> errors = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
+//            // 200 response with 404 status code
+//            //return ResponseEntity.ok(new ErrorResponse("404", "Validation failure", errors));
+//            // 404 request
+//            return ResponseEntity.badRequest().body(new ErrorResponse("404", "Validation failure", errors));
+//        }*/
+//
+//        return new ResponseEntity(
+//             //   new UserResponseDto(userService.createUser(userCreateRequestDto.toEntity())),HttpStatus.CREATED
+//            );
+//        }
 
 
 }

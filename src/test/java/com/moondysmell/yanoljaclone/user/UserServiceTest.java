@@ -1,12 +1,12 @@
 package com.moondysmell.yanoljaclone.user;
 
-import com.moondysmell.yanoljaclone.ServerApplicationTests;
+//import com.moondysmell.yanoljaclone.ServerApplicationTests;
 import com.moondysmell.yanoljaclone.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class UserServiceTest extends ServerApplicationTests {
+public class UserServiceTest  {
 
 	@Autowired
 	private UserRepository userRepository;

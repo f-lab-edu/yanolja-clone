@@ -29,7 +29,7 @@ class ReservationServiceTest {
 	public void create(){
 
 		Date date = new Date();
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 		ReservationMakeDto reservationMakeDto = new ReservationMakeDto();
 
@@ -43,14 +43,7 @@ class ReservationServiceTest {
 		reservationMakeDto.setPaymentType(PaymentType.card);
 		reservationMakeDto.setRoomCnt(1);
 		reservationMakeDto.setReservStatus(ReservStatus.reserv_complete);
-		//reservService.reserv()
-		/*Reservation reserv = new Reservation().builder()
-				.checkin("2021-05-21")
-				.chechout("2021-05-24")
 
-				.email(email)
-				.userOauthType(userOauthType)
-				.build();*/
 		reservService.reserv(reservationMakeDto);
 
 }
@@ -64,14 +57,14 @@ class ReservationServiceTest {
 	public void read(){
 
 
-		List<ReservationResponseDto> reserv = reservService.getReservedResult("kkk",1,"01022223333");
-		//ReservationResponseDto reserv = reservService.getReservedResult("smell",1,"01022223333");
+		List<ReservationResponseDto> reserv = reservService.getReservedResult("smell",1,"01022223333");
+
 	}
 
 	@Test
 	public void cancle(){
 
-		reservService.cancleReservation(1);
+		reservService.cancleReservation(8);
 
 	}
 

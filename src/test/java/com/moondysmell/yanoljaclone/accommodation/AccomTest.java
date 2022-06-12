@@ -86,15 +86,15 @@ public class AccomTest {
         LocalDate from = LocalDate.parse("2022-06-06", DateTimeFormatter.ISO_DATE);
         LocalDate to = LocalDate.parse("2022-06-08", DateTimeFormatter.ISO_DATE);
 
-        int emptyRoomCnt = accomService.countEmptyRoomsByAccomIdAndDate(1,from, to);
-        log.info("result: " + emptyRoomCnt);
+        //int emptyRoomCnt = accomService.countEmptyRoomsByAccomIdAndDate(1,from, to);
+        //log.info("result: " + emptyRoomCnt);
     }
 
 
     @Test
     public void getRoomByDateAccomCode() {
 
-        ResponseEntity<CommonResponse> emtpyRoomDtos = accomController.getRoomByDate("2022-06-07", "2022-06-08", "f7b3db9c");
+        ResponseEntity<CommonResponse> emtpyRoomDtos = accomController.getRoomByDate("2022-06-12", "2022-06-13", "37c678ac");
         log.info("EmptyRoomDtoList 사이즈: " + emtpyRoomDtos.getBody().getAttribute().size());
         log.info("EmptyRoomDto " + emtpyRoomDtos.getBody().getAttribute().toString());
     }
