@@ -1,9 +1,18 @@
 spring:
+  application:
+    name: yanolja-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/yanolja_clone
-    username: dayoung
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: smell
     password: 1234
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://localhost:8761/eureka
+
 
   jpa:
     show-sql: true
